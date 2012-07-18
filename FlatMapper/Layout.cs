@@ -46,7 +46,7 @@ namespace FlatMapper {
 
 		internal abstract string BuildLine(T value);
 
-		protected object GetFieldValueFromString(FieldSettings fieldSettings, string memberValue) {
+		protected virtual object GetFieldValueFromString(FieldSettings fieldSettings, string memberValue) {
 			if (fieldSettings.IsNullable && memberValue.Equals(fieldSettings.NullValue)) {
 				return null;
 			}
@@ -60,7 +60,7 @@ namespace FlatMapper {
 			return Convert.ChangeType(memberValue, fieldSettings.PropertyInfo.PropertyType);
 		}
 
-		protected string GetStringValueFromField(FieldSettings field, object fieldValue) {
+		protected virtual string GetStringValueFromField(FieldSettings field, object fieldValue) {
 			if (fieldValue == null) {
 				return field.NullValue;
 			}

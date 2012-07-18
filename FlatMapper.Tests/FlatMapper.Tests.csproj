@@ -41,8 +41,10 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="FlatFileTests.cs" />
+    <Compile Include="DelimitedFileTests.cs" />
+    <Compile Include="FixedLenghtFileTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="TestObject.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\FlatMapper\FlatMapper.csproj">

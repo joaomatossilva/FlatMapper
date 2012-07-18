@@ -38,6 +38,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="DelimitedLayout.cs" />
     <Compile Include="FieldSettings.cs" />
     <Compile Include="FixedLengthLayout.cs" />
     <Compile Include="FlatFile.cs" />
