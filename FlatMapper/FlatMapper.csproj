@@ -39,6 +39,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="FieldSettings.cs" />
+    <Compile Include="FixedLengthLayout.cs" />
     <Compile Include="FlatFile.cs" />
     <Compile Include="IFieldSettings.cs" />
     <Compile Include="Layout.cs" />
