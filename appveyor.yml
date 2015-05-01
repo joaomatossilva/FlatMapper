@@ -6,6 +6,9 @@ assembly_info:
   assembly_file_version: '{version}'
   assembly_informational_version: '{version}-beta'
 build:
+  publish_nuget: true
+  publish_nuget_symbols: true
+  include_nuget_references: true
   verbosity: minimal
 deploy:
   provider: NuGet
