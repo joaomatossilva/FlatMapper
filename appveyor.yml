@@ -7,3 +7,8 @@ assembly_info:
   assembly_informational_version: '{version}-beta'
 build:
   verbosity: minimal
+deploy:
+  provider: NuGet
+  api_key:
+    secure: c18PmLObjM4XzNKNj8/LzYty11gya98+IerJXipzMmL9wgmHS6cGAJWYpJkDxmU2
+  artifact: /.*\.nupkg/
