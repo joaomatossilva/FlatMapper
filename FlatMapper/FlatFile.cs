@@ -18,6 +18,16 @@ namespace FlatMapper {
 			this.handleEntryReadError = handleEntryReadError;
 		}
 
+        public FlatFile(Layout<T> layout, Stream innerStream)
+            : this(layout, innerStream, DefaultThrowExceptionOnReadError)
+        {
+        }
+
+	    private static bool DefaultThrowExceptionOnReadError(string line, Exception exception)
+	    {
+	        throw new Exception(string.Format("Error reading line '{0}'", line), exception);
+	    }
+
 		public IEnumerable<T> Read() {
 			var reader = new StreamReader(this.innerStream);
 			string line;
