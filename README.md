@@ -1,6 +1,10 @@
 FlatMapper
 ==========
 
+[![Build status](https://ci.appveyor.com/api/projects/status/lrh3rpq62w6ljef1?svg=true)](https://ci.appveyor.com/project/kappy/flatmapper)
+[![NuGet Version](http://img.shields.io/nuget/v/Flatmapper.svg?style=flat)](https://www.nuget.org/packages/Flatmapper/) 
+[![NuGet Downloads](http://img.shields.io/nuget/dt/Flatmapper.svg?style=flat)](https://www.nuget.org/packages/Flatmapper/)
+
 FlatMapper is a library to import and export data from and to plain text files.
 
 
