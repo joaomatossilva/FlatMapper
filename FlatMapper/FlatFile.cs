@@ -31,44 +31,42 @@ namespace FlatMapper
 
         public IEnumerable<T> Read()
         {
-            using (var reader = new StreamReader(this.innerStream))
+            //we're not disposng the StreamReader because it will dispose the inner stream
+            var reader = new StreamReader(this.innerStream);
+            string line;
+            while ((line = reader.ReadLine()) != null)
             {
-                string line;
-                while ((line = reader.ReadLine()) != null)
+                bool ignoreEntry = false;
+                T entry = default(T);
+                try
                 {
-                    bool ignoreEntry = false;
-                    T entry = default(T);
-                    try
+                    entry = layout.ParseLine(line);
+                }
+                catch (Exception ex)
+                {
+                    if (!handleEntryReadError(line, ex))
                     {
-                        entry = layout.ParseLine(line);
+                        throw;
                     }
-                    catch (Exception ex)
-                    {
-                        if (!handleEntryReadError(line, ex))
-                        {
-                            throw;
-                        }
-                        ignoreEntry = true;
-                    }
-                    if (!ignoreEntry)
-                    {
-                        yield return entry;
-                    }
+                    ignoreEntry = true;
+                }
+                if (!ignoreEntry)
+                {
+                    yield return entry;
                 }
             }
         }
 
         public void Write(IEnumerable<T> entries)
         {
-            using (TextWriter writer = new StreamWriter(this.innerStream))
+            //we're not disposng the StramWriter because it will dispose the inner stream
+            var writer = new StreamWriter(this.innerStream);
+            foreach (var entry in entries)
             {
-                foreach (var entry in entries)
-                {
-                    var line = layout.BuildLine(entry);
-                    writer.WriteLine(line);
-                }
-                writer.Flush();
+                var line = layout.BuildLine(entry);
+                writer.WriteLine(line);
             }
+            writer.Flush();
         }
     }
 }

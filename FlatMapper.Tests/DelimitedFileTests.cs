@@ -32,16 +32,16 @@ namespace FlatMapper.Tests
 
 		[Test]
 		public void can_write_read_stream() {
-			using (var memory = new MemoryStream()) {
-				using(var flatFile = new FlatFile<TestObject>(layout, memory, HandleEntryReadError)) {
-					flatFile.Write(objects);
+			using (var memory = new MemoryStream())
+			{
+			    var flatFile = new FlatFile<TestObject>(layout, memory, HandleEntryReadError);
+				flatFile.Write(objects);
 					
-					memory.Seek(0, SeekOrigin.Begin);
+				memory.Seek(0, SeekOrigin.Begin);
 
-					var objectsAfterRead = flatFile.Read().ToList();
+				var objectsAfterRead = flatFile.Read().ToList();
 
-					Assert.IsTrue(objects.SequenceEqual(objectsAfterRead));
-				}
+				Assert.IsTrue(objects.SequenceEqual(objectsAfterRead));
 			}
 		}
 
