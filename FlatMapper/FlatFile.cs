@@ -33,6 +33,7 @@ namespace FlatMapper
         {
             //we're not disposng the StreamReader because it will dispose the inner stream
             var reader = new StreamReader(this.innerStream);
+            SkipHeaders(reader);
             string line;
             while ((line = reader.ReadLine()) != null)
             {
@@ -57,16 +58,34 @@ namespace FlatMapper
             }
         }
 
+        private void SkipHeaders(StreamReader reader)
+        {
+            for (var i = 0; i < layout.HeaderLinesCount && !reader.EndOfStream; i++)
+            {
+                reader.ReadLine();
+            }
+        }
+
         public void Write(IEnumerable<T> entries)
         {
             //we're not disposng the StramWriter because it will dispose the inner stream
             var writer = new StreamWriter(this.innerStream);
+            WriteHeaders(writer);
             foreach (var entry in entries)
             {
                 var line = layout.BuildLine(entry);
                 writer.WriteLine(line);
             }
             writer.Flush();
+        }
+
+        private void WriteHeaders(StreamWriter writer)
+        {
+            for (var i = 0; i < layout.HeaderLinesCount; i++)
+            {
+                var line = layout.BuildHeaderLine();
+                writer.WriteLine(line);
+            }
         }
     }
 }

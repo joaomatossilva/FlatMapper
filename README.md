@@ -20,6 +20,7 @@ FlatMapper is a library to import and export data from and to plain text files.
 ### Fixed Lenght Layout
 
     var layout = new Layout<TestObject>.FixedLengthLayout()
+					.HeaderLines(1)
 					.WithMember(o => o.Id, set => set.WithLenght(5).WithLeftPadding('0'))
 					.WithMember(o => o.Description, set => set.WithLenght(25).WithRightPadding(' '))
 					.WithMember(o => o.NullableInt, set => set.WithLenght(5).AllowNull("=Null").WithLeftPadding('0'));
@@ -30,6 +31,7 @@ FlatMapper is a library to import and export data from and to plain text files.
     var layout = new Layout<TestObject>.DelimitedLayout()
 		            .WithDelimiter(";")
 		            .WithQuote("\"")
+					.HeaderLines(1)
 		            .WithMember(o => o.Id, set => set.WithLenght(5).WithLeftPadding('0'))
 		            .WithMember(o => o.Description, set => set.WithLenght(25).WithRightPadding(' '))
 		            .WithMember(o => o.NullableInt, set => set.WithLenght(5).AllowNull("=Null").WithLeftPadding('0'));

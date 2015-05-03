@@ -1,9 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Linq.Expressions;
 using System.Reflection;
-using System.Text;
 
 namespace FlatMapper
 {
@@ -12,11 +10,21 @@ namespace FlatMapper
 
         protected List<FieldSettings> InnerFields { get; private set; }
 
+        internal int HeaderLinesCount { get; set; }
+
         protected Layout()
         {
             this.InnerFields = new List<FieldSettings>();
         }
 
+        //TODO: Push this into subclasses
+        public Layout<T> HeaderLines(int count)
+        {
+            HeaderLinesCount = count;
+            return this;
+        }
+
+        //TODO: Push this into subclasses
         public Layout<T> WithMember<TMType>(Expression<Func<T, TMType>> expression, Action<IFieldSettings> settings)
         {
             var memberExpression = GetMemberExpression(expression);
@@ -45,7 +53,7 @@ namespace FlatMapper
             return memberExpression;
         }
 
-        public IEnumerable<FieldSettings> Fields
+        internal IEnumerable<FieldSettings> Fields
         {
             get
             {
@@ -56,6 +64,8 @@ namespace FlatMapper
         internal abstract T ParseLine(string line);
 
         internal abstract string BuildLine(T value);
+
+        internal abstract string BuildHeaderLine();
 
         protected virtual object GetFieldValueFromString(FieldSettings fieldSettings, string memberValue)
         {

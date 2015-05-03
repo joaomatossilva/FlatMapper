@@ -75,6 +75,13 @@ namespace FlatMapper
                 return line;
             }
 
+            internal override string BuildHeaderLine()
+            {
+                string line = this.Fields.Aggregate(string.Empty,
+                    (current, field) => current + (current.Length > 0 ? innerDelimiter : "") + field.PropertyInfo.Name);
+                return line;
+            }
+
             protected override object GetFieldValueFromString(FieldSettings fieldSettings, string memberValue)
             {
                 if (!string.IsNullOrEmpty(Quotes))

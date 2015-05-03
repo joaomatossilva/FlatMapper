@@ -20,6 +20,7 @@ namespace FlatMapper.Tests
         public void init_layout()
         {
             layout = new Layout<TestObject>.FixedLengthLayout()
+                    .HeaderLines(2)
                     .WithMember(o => o.Id, set => set.WithLenght(5).WithLeftPadding('0'))
                     .WithMember(o => o.Description, set => set.WithLenght(25).WithRightPadding(' '))
                     .WithMember(o => o.NullableInt, set => set.WithLenght(5).AllowNull("=Null").WithLeftPadding('0'));

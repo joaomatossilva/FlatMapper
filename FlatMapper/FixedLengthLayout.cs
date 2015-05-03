@@ -30,6 +30,13 @@ namespace FlatMapper
                     (current, field) => current + GetStringValueFromField(field, field.PropertyInfo.GetValue(entry, null)));
                 return line;
             }
+
+            internal override string BuildHeaderLine()
+            {
+                string line = this.Fields.Aggregate(string.Empty,
+                    (current, field) => current + GetStringValueFromField(field, field.PropertyInfo.Name));
+                return line;
+            }
         }
     }
 }

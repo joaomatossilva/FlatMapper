@@ -22,6 +22,7 @@ namespace FlatMapper.Tests
             layout = new Layout<TestObject>.DelimitedLayout()
                     .WithDelimiter(";")
                     .WithQuote("\"")
+                    .HeaderLines(2)
                     .WithMember(o => o.Id, set => set.WithLenght(5).WithLeftPadding('0'))
                     .WithMember(o => o.Description, set => set.WithLenght(25).WithRightPadding(' '))
                     .WithMember(o => o.NullableInt, set => set.WithLenght(5).AllowNull("=Null").WithLeftPadding('0'));
