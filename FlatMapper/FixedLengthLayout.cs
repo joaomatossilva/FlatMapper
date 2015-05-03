@@ -1,7 +1,6 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
-using System.Text;
+using System.Linq.Expressions;
 
 namespace FlatMapper
 {
@@ -9,6 +8,15 @@ namespace FlatMapper
     {
         public class FixedLengthLayout : Layout<T>
         {
+            public new FixedLengthLayout HeaderLines(int count)
+            {
+                return (FixedLengthLayout)base.HeaderLines(count);
+            }
+
+            public new FixedLengthLayout WithMember<TMType>(Expression<Func<T, TMType>> expression, Action<IFieldSettings> settings)
+            {
+                return (FixedLengthLayout)base.WithMember(expression, settings);
+            }
 
             internal override T ParseLine(string line)
             {

@@ -17,15 +17,13 @@ namespace FlatMapper
             this.InnerFields = new List<FieldSettings>();
         }
 
-        //TODO: Push this into subclasses
-        public Layout<T> HeaderLines(int count)
+        protected Layout<T> HeaderLines(int count)
         {
             HeaderLinesCount = count;
             return this;
         }
 
-        //TODO: Push this into subclasses
-        public Layout<T> WithMember<TMType>(Expression<Func<T, TMType>> expression, Action<IFieldSettings> settings)
+        protected Layout<T> WithMember<TMType>(Expression<Func<T, TMType>> expression, Action<IFieldSettings> settings)
         {
             var memberExpression = GetMemberExpression(expression);
             var fieldSettings = new FieldSettings(memberExpression.Member as PropertyInfo);

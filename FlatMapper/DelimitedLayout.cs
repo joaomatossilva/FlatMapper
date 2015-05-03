@@ -1,7 +1,6 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
-using System.Text;
+using System.Linq.Expressions;
 
 namespace FlatMapper
 {
@@ -13,6 +12,16 @@ namespace FlatMapper
             private string Quotes { get; set; }
 
             private string innerDelimiter = ",";
+
+            public new DelimitedLayout HeaderLines(int count)
+            {
+                return (DelimitedLayout)base.HeaderLines(count);
+            }
+
+            public new DelimitedLayout WithMember<TMType>(Expression<Func<T, TMType>> expression, Action<IFieldSettings> settings)
+            {
+                return (DelimitedLayout)base.WithMember(expression, settings);
+            }
 
             public DelimitedLayout WithQuote(string quotes)
             {
