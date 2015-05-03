@@ -3,14 +3,16 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
-namespace FlatMapper {
-	public interface IFieldSettings {
-		IFieldSettings WithLenght(int lenght);
+namespace FlatMapper
+{
+    public interface IFieldSettings
+    {
+        IFieldSettings WithLenght(int lenght);
 
-		IFieldSettings WithLeftPadding(char paddingChar);
+        IFieldSettings WithLeftPadding(char paddingChar);
 
-		IFieldSettings WithRightPadding(char paddingChar);
+        IFieldSettings WithRightPadding(char paddingChar);
 
-		IFieldSettings AllowNull(string nullValue);
-	}
+        IFieldSettings AllowNull(string nullValue);
+    }
 }

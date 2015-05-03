@@ -8,43 +8,48 @@ using NUnit.Framework;
 
 namespace FlatMapper.Tests
 {
-	[TestFixture]
-    public class FixedLenghtFileTests {
+    [TestFixture]
+    public class FixedLenghtFileTests
+    {
 
-		private Layout<TestObject> layout;
+        private Layout<TestObject> layout;
 
-		private IList<TestObject> objects;
-			
-		[SetUp]
-		public void init_layout() {
-			layout = new Layout<TestObject>.FixedLengthLayout()
-					.WithMember(o => o.Id, set => set.WithLenght(5).WithLeftPadding('0'))
-					.WithMember(o => o.Description, set => set.WithLenght(25).WithRightPadding(' '))
-					.WithMember(o => o.NullableInt, set => set.WithLenght(5).AllowNull("=Null").WithLeftPadding('0'));
+        private IList<TestObject> objects;
 
-			objects = new List<TestObject>();
-			for (int i = 1; i <= 10; i++) {
-				objects.Add(new TestObject { Id = i, Description = "Description " + i, NullableInt = i % 5 == 0 ? null: (int?)3 });
-			}
-		}
+        [SetUp]
+        public void init_layout()
+        {
+            layout = new Layout<TestObject>.FixedLengthLayout()
+                    .WithMember(o => o.Id, set => set.WithLenght(5).WithLeftPadding('0'))
+                    .WithMember(o => o.Description, set => set.WithLenght(25).WithRightPadding(' '))
+                    .WithMember(o => o.NullableInt, set => set.WithLenght(5).AllowNull("=Null").WithLeftPadding('0'));
 
-		[Test]
-		public void can_write_read_stream() {
-		    using (var memory = new MemoryStream())
-		    {
-		        var flatFile = new FlatFile<TestObject>(layout, memory, HandleEntryReadError);
-		        flatFile.Write(objects);
+            objects = new List<TestObject>();
+            for (int i = 1; i <= 10; i++)
+            {
+                objects.Add(new TestObject { Id = i, Description = "Description " + i, NullableInt = i % 5 == 0 ? null : (int?)3 });
+            }
+        }
 
-		        memory.Seek(0, SeekOrigin.Begin);
+        [Test]
+        public void can_write_read_stream()
+        {
+            using (var memory = new MemoryStream())
+            {
+                var flatFile = new FlatFile<TestObject>(layout, memory, HandleEntryReadError);
+                flatFile.Write(objects);
 
-		        var objectsAfterRead = flatFile.Read().ToList();
+                memory.Seek(0, SeekOrigin.Begin);
 
-		        Assert.IsTrue(objects.SequenceEqual(objectsAfterRead));
-		    }
-		}
+                var objectsAfterRead = flatFile.Read().ToList();
 
-		private bool HandleEntryReadError(string s, Exception exception) {
-			return true;
-		}
+                Assert.IsTrue(objects.SequenceEqual(objectsAfterRead));
+            }
+        }
+
+        private bool HandleEntryReadError(string s, Exception exception)
+        {
+            return true;
+        }
     }
 }
