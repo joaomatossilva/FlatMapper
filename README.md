@@ -11,7 +11,7 @@ FlatMapper is a library to import and export data from and to plain text files.
 ## Features
 
 + It supports character delimited and fixed lenght files
-+ Non intrusive - You don't have to chnage your code
++ Non intrusive - You don't have to change your code
 + Simple to use
 
 
