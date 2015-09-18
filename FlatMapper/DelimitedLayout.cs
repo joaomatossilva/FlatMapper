@@ -18,8 +18,10 @@
 
 #endregion
 using System;
+using System.IO;
 using System.Linq;
 using System.Linq.Expressions;
+using System.Text;
 
 namespace FlatMapper
 {
@@ -31,6 +33,8 @@ namespace FlatMapper
             private string Quotes { get; set; }
 
             private string innerDelimiter = ",";
+
+            private bool multiLine = false;
 
             public new DelimitedLayout HeaderLines(int count)
             {
@@ -51,6 +55,12 @@ namespace FlatMapper
             public DelimitedLayout WithDelimiter(string delimiter)
             {
                 Delimiter = delimiter;
+                return this;
+            }
+
+            public DelimitedLayout WithMultiLine(bool multiLine)
+            {
+                this.multiLine = multiLine;
                 return this;
             }
 
@@ -127,6 +137,42 @@ namespace FlatMapper
                     stringValue = string.Format("{0}{1}{0}", Quotes, stringValue);
                 }
                 return stringValue;
+            }
+
+            public override string ReadLine(StreamReader streamReader)
+            {
+                if(!multiLine)
+                {
+                    return base.ReadLine(streamReader);
+                }
+                
+                return ReadLinesUntilQuote(streamReader);
+            }
+
+            //Credits to Nuno Santos for original algorithm behind this method
+            private string ReadLinesUntilQuote(StreamReader reader)
+            {
+                var stringBuilder = new StringBuilder();
+                string line;
+                do
+                {
+                    line = reader.ReadLine();
+                    if (string.IsNullOrEmpty(line))
+                    {
+                        continue;
+                    }
+                    if (!line.EndsWith(Quotes))
+                    {
+                        stringBuilder.AppendLine(line);
+                    }
+                    else
+                    {
+                        stringBuilder.Append(line);
+                        break;
+                    }
+                } while (line != null);
+                var completeLine = stringBuilder.ToString();
+                return string.IsNullOrEmpty(completeLine) ? null : completeLine;
             }
         }
     }

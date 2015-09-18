@@ -44,6 +44,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="MultiLineDelimitedFileTests.cs" />
     <Compile Include="DelimitedFileTests.cs" />
     <Compile Include="FixedLenghtFileTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

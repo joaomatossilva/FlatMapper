@@ -54,7 +54,7 @@ namespace FlatMapper
             var reader = new StreamReader(this.innerStream);
             SkipHeaders(reader);
             string line;
-            while ((line = reader.ReadLine()) != null)
+            while ((line = layout.ReadLine(reader)) != null)
             {
                 bool ignoreEntry = false;
                 T entry = default(T);

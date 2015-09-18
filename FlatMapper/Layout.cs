@@ -19,6 +19,7 @@
 #endregion
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq.Expressions;
 using System.Reflection;
 
@@ -117,5 +118,9 @@ namespace FlatMapper
             return lineValue;
         }
 
+        public virtual string ReadLine(StreamReader streamReader)
+        {
+            return streamReader.ReadLine();
+        }
     }
 }
