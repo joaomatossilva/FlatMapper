@@ -77,17 +77,18 @@ namespace FlatMapper
                 }
             }
 
-            internal override T ParseLine(string line)
+            public override T ParseLine(string line)
             {
                 var entry = new T();
                 int linePosition = 0;
-                int delimiterSize = Delimiter.Length;
+                var compositeDelimiter = !string.IsNullOrEmpty(Quotes) ? Quotes + Delimiter + Quotes : Delimiter;
+                int delimiterSize = compositeDelimiter.Length;
                 foreach (var field in this.Fields)
                 {
                     int nextDelimiterIndex = -1;
                     if (line.Length > linePosition + delimiterSize)
                     {
-                        nextDelimiterIndex = line.IndexOf(Delimiter, linePosition, StringComparison.InvariantCultureIgnoreCase);
+                        nextDelimiterIndex = line.IndexOf(compositeDelimiter, linePosition, StringComparison.InvariantCultureIgnoreCase);
                     }
                     int fieldLenght;
                     if (nextDelimiterIndex > -1)
@@ -106,14 +107,14 @@ namespace FlatMapper
                 return entry;
             }
 
-            internal override string BuildLine(T entry)
+            public override string BuildLine(T entry)
             {
                 string line = this.Fields.Aggregate(string.Empty,
                     (current, field) => current + (current.Length > 0 ? innerDelimiter : "") + GetStringValueFromField(field, field.PropertyInfo.GetValue(entry, null)));
                 return line;
             }
 
-            internal override string BuildHeaderLine()
+            public override string BuildHeaderLine()
             {
                 string line = this.Fields.Aggregate(string.Empty,
                     (current, field) => current + (current.Length > 0 ? innerDelimiter : "") + field.PropertyInfo.Name);

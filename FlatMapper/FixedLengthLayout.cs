@@ -37,7 +37,7 @@ namespace FlatMapper
                 return (FixedLengthLayout)base.WithMember(expression, settings);
             }
 
-            internal override T ParseLine(string line)
+            public override T ParseLine(string line)
             {
                 var entry = new T();
                 int linePosition = 0;
@@ -51,14 +51,14 @@ namespace FlatMapper
                 return entry;
             }
 
-            internal override string BuildLine(T entry)
+            public override string BuildLine(T entry)
             {
                 string line = this.Fields.Aggregate(string.Empty,
                     (current, field) => current + GetStringValueFromField(field, field.PropertyInfo.GetValue(entry, null)));
                 return line;
             }
 
-            internal override string BuildHeaderLine()
+            public override string BuildHeaderLine()
             {
                 string line = this.Fields.Aggregate(string.Empty,
                     (current, field) => current + GetStringValueFromField(field, field.PropertyInfo.Name));

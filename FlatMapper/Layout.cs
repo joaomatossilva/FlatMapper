@@ -79,11 +79,11 @@ namespace FlatMapper
             }
         }
 
-        internal abstract T ParseLine(string line);
+        public abstract T ParseLine(string line);
 
-        internal abstract string BuildLine(T value);
+        public abstract string BuildLine(T value);
 
-        internal abstract string BuildHeaderLine();
+        public abstract string BuildHeaderLine();
 
         protected virtual object GetFieldValueFromString(FieldSettings fieldSettings, string memberValue)
         {

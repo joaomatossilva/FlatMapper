@@ -55,5 +55,14 @@ namespace FlatMapper.Tests
         {
             return false;
         }
+
+        [Test]
+        public void can_read_string_with_delimiter_on_text()
+        {
+            var testString = "this;is;the;test";
+            var completeString = "\"12\";\"" + testString + "\";\"=Null\"";
+            var result = layout.ParseLine(completeString);
+            Assert.AreEqual(testString, result.Description);
+        }
     }
 }
