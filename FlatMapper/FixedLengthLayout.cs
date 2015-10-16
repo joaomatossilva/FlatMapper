@@ -20,6 +20,8 @@
 using System;
 using System.Linq;
 using System.Linq.Expressions;
+using System.Security.AccessControl;
+using System.Text;
 
 namespace FlatMapper
 {
@@ -37,15 +39,29 @@ namespace FlatMapper
                 return (FixedLengthLayout)base.WithMember(expression, settings);
             }
 
+            private int _lineSize;
+
+            private int LineSize
+            {
+                get
+                {
+                    if (_lineSize == 0)
+                    {
+                        _lineSize = this.Fields.Sum(f => f.Lenght);
+                    }
+                    return _lineSize;
+                }
+            }
+
             public override T ParseLine(string line)
             {
-                var entry = new T();
+                var entry = ItemCreateInstanceHandler();
                 int linePosition = 0;
                 foreach (var field in this.Fields)
                 {
                     string fieldValueFromLine = line.Substring(linePosition, field.Lenght);
                     var convertedFieldValue = GetFieldValueFromString(field, fieldValueFromLine);
-                    field.PropertyInfo.SetValue(entry, convertedFieldValue, null);
+                    field.SetHandler(entry, convertedFieldValue);
                     linePosition += field.Lenght;
                 }
                 return entry;
@@ -53,13 +69,18 @@ namespace FlatMapper
 
             public override string BuildLine(T entry)
             {
-                string line = this.Fields.Aggregate(string.Empty,
-                    (current, field) => current + GetStringValueFromField(field, field.PropertyInfo.GetValue(entry, null)));
-                return line;
+                var sb = new StringBuilder(LineSize);
+                foreach (var fieldSettingse in this.Fields)
+                {
+                    var fieldValue = fieldSettingse.GetHandler(entry);
+                    sb.Append(GetStringValueFromField(fieldSettingse, fieldValue));
+                }
+                return sb.ToString();
             }
 
             public override string BuildHeaderLine()
             {
+                //TODO: use stringBuilder to handle Headers, Truncate header name by FieldLenght if needed
                 string line = this.Fields.Aggregate(string.Empty,
                     (current, field) => current + GetStringValueFromField(field, field.PropertyInfo.Name));
                 return line;

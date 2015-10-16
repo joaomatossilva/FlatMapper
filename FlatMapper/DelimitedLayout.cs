@@ -79,7 +79,7 @@ namespace FlatMapper
 
             public override T ParseLine(string line)
             {
-                var entry = new T();
+                var entry = ItemCreateInstanceHandler();
                 int linePosition = 0;
                 var compositeDelimiter = !string.IsNullOrEmpty(Quotes) ? Quotes + Delimiter + Quotes : Delimiter;
                 int delimiterSize = compositeDelimiter.Length;
@@ -101,7 +101,7 @@ namespace FlatMapper
                     }
                     string fieldValueFromLine = line.Substring(linePosition, fieldLenght);
                     var convertedFieldValue = GetFieldValueFromString(field, fieldValueFromLine);
-                    field.PropertyInfo.SetValue(entry, convertedFieldValue, null);
+                    field.SetHandler(entry, convertedFieldValue);
                     linePosition += fieldLenght + (nextDelimiterIndex > -1 ? delimiterSize : 0);
                 }
                 return entry;
@@ -109,9 +109,19 @@ namespace FlatMapper
 
             public override string BuildLine(T entry)
             {
-                string line = this.Fields.Aggregate(string.Empty,
-                    (current, field) => current + (current.Length > 0 ? innerDelimiter : "") + GetStringValueFromField(field, field.PropertyInfo.GetValue(entry, null)));
-                return line;
+                var sb = new StringBuilder(100); //TODO: Use better logic to guess a line size istead of hardcoded
+                bool firstField = true;
+                foreach (var fieldSettingse in this.Fields)
+                {
+                    if (!firstField)
+                    {
+                        sb.Append(innerDelimiter);
+                    }
+                    var fieldValue = fieldSettingse.GetHandler(entry);
+                    sb.Append(GetStringValueFromField(fieldSettingse, fieldValue));
+                    firstField = false;
+                }
+                return sb.ToString();
             }
 
             public override string BuildHeaderLine()

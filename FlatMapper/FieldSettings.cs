@@ -17,6 +17,8 @@
 // 
 
 #endregion
+
+using System;
 using System.Reflection;
 
 namespace FlatMapper
@@ -29,12 +31,22 @@ namespace FlatMapper
         public bool IsNullable { get; set; }
         public string NullValue { get; set; }
         public bool PadLeft { get; set; }
-        public PropertyInfo PropertyInfo { get; set; }
+        public PropertyInfo PropertyInfo { get; private set; }
+        public Type ConvertToType { get; private set; }
+        public Func<object, object> GetHandler { get; private set; }
+        public Action<object, object> SetHandler { get; private set; }
 
 
-        public FieldSettings(PropertyInfo propertyInfo)
+        public FieldSettings(Type baseType, PropertyInfo propertyInfo)
         {
             this.PropertyInfo = propertyInfo;
+            ConvertToType = propertyInfo.PropertyType;
+            if (propertyInfo.PropertyType.IsGenericType && propertyInfo.PropertyType.GetGenericTypeDefinition() == typeof(Nullable<>))
+            {
+                ConvertToType = Nullable.GetUnderlyingType(propertyInfo.PropertyType);
+            }
+            GetHandler = DynamicMethodCompiler.CreateGetHandler(baseType, propertyInfo);
+            SetHandler = DynamicMethodCompiler.CreateSetHandler(baseType, propertyInfo);
         }
 
         public IFieldSettings WithLenght(int lenght)

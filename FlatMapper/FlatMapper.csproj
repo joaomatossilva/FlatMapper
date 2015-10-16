@@ -28,6 +28,7 @@
     <DefineConstants>TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
+    <GenerateSerializationAssemblies>Off</GenerateSerializationAssemblies>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="System" />
@@ -39,6 +40,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="DelimitedLayout.cs" />
+    <Compile Include="DynamicMethodCompiler.cs" />
     <Compile Include="FieldSettings.cs" />
     <Compile Include="FixedLengthLayout.cs" />
     <Compile Include="FlatFile.cs" />

@@ -31,10 +31,12 @@ namespace FlatMapper
         protected List<FieldSettings> InnerFields { get; private set; }
 
         internal int HeaderLinesCount { get; set; }
+        protected Func<T> ItemCreateInstanceHandler { get; private set; }
 
         protected Layout()
         {
             this.InnerFields = new List<FieldSettings>();
+            this.ItemCreateInstanceHandler = DynamicMethodCompiler.CreateInstantiateObjectHandler<T>();
         }
 
         protected Layout<T> HeaderLines(int count)
@@ -46,7 +48,7 @@ namespace FlatMapper
         protected Layout<T> WithMember<TMType>(Expression<Func<T, TMType>> expression, Action<IFieldSettings> settings)
         {
             var memberExpression = GetMemberExpression(expression);
-            var fieldSettings = new FieldSettings(memberExpression.Member as PropertyInfo);
+            var fieldSettings = new FieldSettings(typeof(T), memberExpression.Member as PropertyInfo);
             settings(fieldSettings);
             InnerFields.Add(fieldSettings);
             return this;
@@ -94,12 +96,9 @@ namespace FlatMapper
             memberValue = fieldSettings.PadLeft
                             ? memberValue.TrimStart(new char[] { fieldSettings.PaddingChar })
                             : memberValue.TrimEnd(new char[] { fieldSettings.PaddingChar });
-            if (fieldSettings.PropertyInfo.PropertyType.IsGenericType
-                && fieldSettings.PropertyInfo.PropertyType.GetGenericTypeDefinition() == typeof(Nullable<>))
-            {
-                return Convert.ChangeType(memberValue, Nullable.GetUnderlyingType(fieldSettings.PropertyInfo.PropertyType));
-            }
-            return Convert.ChangeType(memberValue, fieldSettings.PropertyInfo.PropertyType);
+
+            //TODO: Execute here custom converters
+            return Convert.ChangeType(memberValue, fieldSettings.ConvertToType);
         }
 
         protected virtual string GetStringValueFromField(FieldSettings field, object fieldValue)
