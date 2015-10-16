@@ -41,7 +41,7 @@ namespace FlatMapper
                 return (DelimitedLayout)base.HeaderLines(count);
             }
 
-            public new DelimitedLayout WithMember<TMType>(Expression<Func<T, TMType>> expression, Action<IFieldSettings> settings)
+            public new DelimitedLayout WithMember(Expression<Func<T, object>> expression, Action<IFieldSettings> settings)
             {
                 return (DelimitedLayout)base.WithMember(expression, settings);
             }
@@ -131,7 +131,7 @@ namespace FlatMapper
                 return line;
             }
 
-            protected override object GetFieldValueFromString(FieldSettings fieldSettings, string memberValue)
+            protected override object GetFieldValueFromString(FieldSettings<T> fieldSettings, string memberValue)
             {
                 if (!string.IsNullOrEmpty(Quotes))
                 {
@@ -140,7 +140,7 @@ namespace FlatMapper
                 return base.GetFieldValueFromString(fieldSettings, memberValue);
             }
 
-            protected override string GetStringValueFromField(FieldSettings field, object fieldValue)
+            protected override string GetStringValueFromField(FieldSettings<T> field, object fieldValue)
             {
                 var stringValue = base.GetStringValueFromField(field, fieldValue);
                 if (!string.IsNullOrEmpty(Quotes))

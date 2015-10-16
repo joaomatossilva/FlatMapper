@@ -28,14 +28,14 @@ namespace FlatMapper
     public abstract partial class Layout<T>
     {
 
-        protected List<FieldSettings> InnerFields { get; private set; }
+        protected List<FieldSettings<T>> InnerFields { get; private set; }
 
         internal int HeaderLinesCount { get; set; }
         protected Func<T> ItemCreateInstanceHandler { get; private set; }
 
         protected Layout()
         {
-            this.InnerFields = new List<FieldSettings>();
+            this.InnerFields = new List<FieldSettings<T>>();
             this.ItemCreateInstanceHandler = DynamicMethodCompiler.CreateInstantiateObjectHandler<T>();
         }
 
@@ -45,35 +45,15 @@ namespace FlatMapper
             return this;
         }
 
-        protected Layout<T> WithMember<TMType>(Expression<Func<T, TMType>> expression, Action<IFieldSettings> settings)
+        protected Layout<T> WithMember(Expression<Func<T, object>> expression, Action<IFieldSettings> settings)
         {
-            var memberExpression = GetMemberExpression(expression);
-            var fieldSettings = new FieldSettings(typeof(T), memberExpression.Member as PropertyInfo);
+            var fieldSettings = new FieldSettings<T>(expression);
             settings(fieldSettings);
             InnerFields.Add(fieldSettings);
             return this;
         }
 
-        private MemberExpression GetMemberExpression<TMType>(Expression<Func<T, TMType>> expression)
-        {
-            MemberExpression memberExpression = null;
-            if (expression.Body.NodeType == ExpressionType.Convert)
-            {
-                var body = (UnaryExpression)expression.Body;
-                memberExpression = body.Operand as MemberExpression;
-            }
-            else if (expression.Body.NodeType == ExpressionType.MemberAccess)
-            {
-                memberExpression = expression.Body as MemberExpression;
-            }
-            if (memberExpression == null)
-            {
-                throw new ArgumentException("Not a member access", "expression");
-            }
-            return memberExpression;
-        }
-
-        internal IEnumerable<FieldSettings> Fields
+        internal IEnumerable<FieldSettings<T>> Fields
         {
             get
             {
@@ -87,7 +67,7 @@ namespace FlatMapper
 
         public abstract string BuildHeaderLine();
 
-        protected virtual object GetFieldValueFromString(FieldSettings fieldSettings, string memberValue)
+        protected virtual object GetFieldValueFromString(FieldSettings<T> fieldSettings, string memberValue)
         {
             if (fieldSettings.IsNullable && memberValue.Equals(fieldSettings.NullValue))
             {
@@ -101,7 +81,7 @@ namespace FlatMapper
             return Convert.ChangeType(memberValue, fieldSettings.ConvertToType);
         }
 
-        protected virtual string GetStringValueFromField(FieldSettings field, object fieldValue)
+        protected virtual string GetStringValueFromField(FieldSettings<T> field, object fieldValue)
         {
             if (fieldValue == null)
             {

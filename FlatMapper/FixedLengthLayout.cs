@@ -34,7 +34,7 @@ namespace FlatMapper
                 return (FixedLengthLayout)base.HeaderLines(count);
             }
 
-            public new FixedLengthLayout WithMember<TMType>(Expression<Func<T, TMType>> expression, Action<IFieldSettings> settings)
+            public new FixedLengthLayout WithMember(Expression<Func<T, object>> expression, Action<IFieldSettings> settings)
             {
                 return (FixedLengthLayout)base.WithMember(expression, settings);
             }

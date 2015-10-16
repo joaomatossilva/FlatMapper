@@ -45,8 +45,9 @@ namespace FlatMapper
         /// <param name="type"></param>
         /// <param name="propertyInfo"></param>
         /// <returns></returns>
-        internal static Func<object,object> CreateGetHandler(Type type, PropertyInfo propertyInfo)
+        internal static Func<object,object> CreateGetHandler<T>(PropertyInfo propertyInfo)
         {
+            var type = typeof (T);
             MethodInfo getMethodInfo = propertyInfo.GetGetMethod(true);
             DynamicMethod dynamicGet = CreateGetDynamicMethod(type);
             ILGenerator getGenerator = dynamicGet.GetILGenerator();
@@ -66,8 +67,9 @@ namespace FlatMapper
         /// <param name="type"></param>
         /// <param name="propertyInfo"></param>
         /// <returns></returns>
-        internal static Action<object, object> CreateSetHandler(Type type, PropertyInfo propertyInfo)
+        internal static Action<object, object> CreateSetHandler<T>(PropertyInfo propertyInfo)
         {
+            var type = typeof(T);
             MethodInfo setMethodInfo = propertyInfo.GetSetMethod(true);
             DynamicMethod dynamicSet = CreateSetDynamicMethod(type);
             ILGenerator setGenerator = dynamicSet.GetILGenerator();
