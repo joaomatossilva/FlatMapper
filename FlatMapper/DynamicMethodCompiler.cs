@@ -27,15 +27,13 @@ namespace FlatMapper
             }
 
             DynamicMethod dynamicMethod = new DynamicMethod("InstantiateObject", MethodAttributes.Static | MethodAttributes.Public, 
-                CallingConventions.Standard, typeof(object), null, type, true);
+                CallingConventions.Standard, typeof(T), null, type, true);
 
             ILGenerator generator = dynamicMethod.GetILGenerator();
             generator.Emit(OpCodes.Newobj, constructorInfo);
             generator.Emit(OpCodes.Ret);
-            var handler =  (Func<object>)dynamicMethod.CreateDelegate(typeof(Func<object>));
 
-            //TODO: Fix Il code to return a Func<T>
-            return () => (T) handler();
+            return (Func<T>)dynamicMethod.CreateDelegate(typeof(Func<T>));
         }
 
         /// <summary>
@@ -45,11 +43,11 @@ namespace FlatMapper
         /// <param name="type"></param>
         /// <param name="propertyInfo"></param>
         /// <returns></returns>
-        internal static Func<object,object> CreateGetHandler<T>(PropertyInfo propertyInfo)
+        internal static Func<T, object> CreateGetHandler<T>(PropertyInfo propertyInfo)
         {
             var type = typeof (T);
             MethodInfo getMethodInfo = propertyInfo.GetGetMethod(true);
-            DynamicMethod dynamicGet = CreateGetDynamicMethod(type);
+            DynamicMethod dynamicGet = CreateGetDynamicMethod<T>();
             ILGenerator getGenerator = dynamicGet.GetILGenerator();
 
             getGenerator.Emit(OpCodes.Ldarg_0);
@@ -57,7 +55,7 @@ namespace FlatMapper
             BoxIfNeeded(getMethodInfo.ReturnType, getGenerator);
             getGenerator.Emit(OpCodes.Ret);
 
-            return (Func<object, object>)dynamicGet.CreateDelegate(typeof(Func<object, object>));
+            return (Func<T, object>)dynamicGet.CreateDelegate(typeof(Func<T, object>));
         }
 
         /// <summary>
@@ -67,11 +65,11 @@ namespace FlatMapper
         /// <param name="type"></param>
         /// <param name="propertyInfo"></param>
         /// <returns></returns>
-        internal static Action<object, object> CreateSetHandler<T>(PropertyInfo propertyInfo)
+        internal static Action<T, object> CreateSetHandler<T>(PropertyInfo propertyInfo)
         {
             var type = typeof(T);
             MethodInfo setMethodInfo = propertyInfo.GetSetMethod(true);
-            DynamicMethod dynamicSet = CreateSetDynamicMethod(type);
+            DynamicMethod dynamicSet = CreateSetDynamicMethod<T>();
             ILGenerator setGenerator = dynamicSet.GetILGenerator();
 
             setGenerator.Emit(OpCodes.Ldarg_0);
@@ -80,19 +78,19 @@ namespace FlatMapper
             setGenerator.Emit(OpCodes.Call, setMethodInfo);
             setGenerator.Emit(OpCodes.Ret);
 
-            return (Action<object, object>)dynamicSet.CreateDelegate(typeof(Action<object, object>));
+            return (Action<T, object>)dynamicSet.CreateDelegate(typeof(Action<T, object>));
         }
 
-        private static DynamicMethod CreateGetDynamicMethod(Type type)
+        private static DynamicMethod CreateGetDynamicMethod<T>()
         {
             return new DynamicMethod("DynamicGet", typeof(object),
-                  new Type[] { typeof(object) }, type, true);
+                  new Type[] { typeof(T) }, typeof(T), true);
         }
 
-        private static DynamicMethod CreateSetDynamicMethod(Type type)
+        private static DynamicMethod CreateSetDynamicMethod<T>()
         {
             return new DynamicMethod("DynamicSet", typeof(void),
-                  new Type[] { typeof(object), typeof(object) }, type, true);
+                  new Type[] { typeof(T), typeof(object) }, typeof(T), true);
         }
 
         private static void BoxIfNeeded(Type type, ILGenerator generator)

@@ -34,8 +34,8 @@ namespace FlatMapper
         public bool PadLeft { get; set; }
         public PropertyInfo PropertyInfo { get; protected set; }
         public Type ConvertToType { get; protected set; }
-        public Func<object, object> GetHandler { get; protected set; }
-        public Action<object, object> SetHandler { get; protected set; }
+        public Func<T, object> GetHandler { get; protected set; }
+        public Action<T, object> SetHandler { get; protected set; }
 
         public FieldSettings(Expression<Func<T, object>> expression)
         {
