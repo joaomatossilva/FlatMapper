@@ -47,7 +47,7 @@ namespace FlatMapper
                 {
                     if (_lineSize == 0)
                     {
-                        _lineSize = this.Fields.Sum(f => f.Lenght);
+                        _lineSize = this.Fields.Sum(f => f.Length);
                     }
                     return _lineSize;
                 }
@@ -59,10 +59,10 @@ namespace FlatMapper
                 int linePosition = 0;
                 foreach (var field in this.Fields)
                 {
-                    string fieldValueFromLine = line.Substring(linePosition, field.Lenght);
+                    string fieldValueFromLine = line.Substring(linePosition, field.Length);
                     var convertedFieldValue = GetFieldValueFromString(field, fieldValueFromLine);
                     field.SetHandler(entry, convertedFieldValue);
-                    linePosition += field.Lenght;
+                    linePosition += field.Length;
                 }
                 return entry;
             }
@@ -80,7 +80,7 @@ namespace FlatMapper
 
             public override string BuildHeaderLine()
             {
-                //TODO: use stringBuilder to handle Headers, Truncate header name by FieldLenght if needed
+                //TODO: use stringBuilder to handle Headers, Truncate header name by FieldLength if needed
                 string line = this.Fields.Aggregate(string.Empty,
                     (current, field) => current + GetStringValueFromField(field, field.PropertyInfo.Name));
                 return line;

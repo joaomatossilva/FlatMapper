@@ -88,11 +88,11 @@ namespace FlatMapper
                 return field.NullValue;
             }
             string lineValue = fieldValue.ToString();
-            if (lineValue.Length < field.Lenght)
+            if (lineValue.Length < field.Length)
             {
                 lineValue = field.PadLeft
-                                ? lineValue.PadLeft(field.Lenght, field.PaddingChar)
-                                : lineValue.PadRight(field.Lenght, field.PaddingChar);
+                                ? lineValue.PadLeft(field.Length, field.PaddingChar)
+                                : lineValue.PadRight(field.Length, field.PaddingChar);
             }
             return lineValue;
         }

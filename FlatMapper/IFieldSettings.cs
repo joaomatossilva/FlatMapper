@@ -21,7 +21,7 @@ namespace FlatMapper
 {
     public interface IFieldSettings
     {
-        IFieldSettings WithLenght(int lenght);
+        IFieldSettings WithLength(int length);
 
         IFieldSettings WithLeftPadding(char paddingChar);
 

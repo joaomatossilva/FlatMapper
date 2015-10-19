@@ -10,20 +10,27 @@ FlatMapper is a library to import and export data from and to plain text files.
 
 ## Features
 
-+ It supports character delimited and fixed lenght files
-+ Non intrusive - You don't have to change your code
++ Fast - Only uses Static Reflection and Dynamic methods
++ It supports character delimited and fixed length files
++ Non intrusive - You don't have to change your code. Any POCO will work
++ No external Dependencies
++ Iterative reads - Doesn't need to load the entire file into memory
++ Multi-line support - Only if character delimited and quoted
++ Nullables support
++ Fluent Interface
++ Per line/record Error handling
 + Simple to use
 
 
 ## How to use
 
-### Fixed Lenght Layout
+### Fixed Length Layout
 
     var layout = new Layout<TestObject>.FixedLengthLayout()
 					.HeaderLines(1)
-					.WithMember(o => o.Id, set => set.WithLenght(5).WithLeftPadding('0'))
-					.WithMember(o => o.Description, set => set.WithLenght(25).WithRightPadding(' '))
-					.WithMember(o => o.NullableInt, set => set.WithLenght(5).AllowNull("=Null").WithLeftPadding('0'));
+					.WithMember(o => o.Id, set => set.WithLength(5).WithLeftPadding('0'))
+					.WithMember(o => o.Description, set => set.WithLength(25).WithRightPadding(' '))
+					.WithMember(o => o.NullableInt, set => set.WithLength(5).AllowNull("=Null").WithLeftPadding('0'));
     
 
 ### Delimited Layout
@@ -32,9 +39,9 @@ FlatMapper is a library to import and export data from and to plain text files.
 		            .WithDelimiter(";")
 		            .WithQuote("\"")
 					.HeaderLines(1)
-		            .WithMember(o => o.Id, set => set.WithLenght(5).WithLeftPadding('0'))
-		            .WithMember(o => o.Description, set => set.WithLenght(25).WithRightPadding(' '))
-		            .WithMember(o => o.NullableInt, set => set.WithLenght(5).AllowNull("=Null").WithLeftPadding('0'));
+		            .WithMember(o => o.Id, set => set.WithLength(5).WithLeftPadding('0'))
+		            .WithMember(o => o.Description, set => set.WithLength(25).WithRightPadding(' '))
+		            .WithMember(o => o.NullableInt, set => set.WithLength(5).AllowNull("=Null").WithLeftPadding('0'));
 
 ### Reading and Writing
 
@@ -55,3 +62,5 @@ FlatMapper is a library to import and export data from and to plain text files.
         flatfile.Write(listOfObjects);
     }
 
+
+For more detailed information please check the [wiki](https://github.com/kappy/FlatMapper/wiki)

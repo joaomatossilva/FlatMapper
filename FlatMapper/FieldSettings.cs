@@ -27,7 +27,7 @@ namespace FlatMapper
     public class FieldSettings<T> : IFieldSettings
     {
 
-        public int Lenght { get; set; }
+        public int Length { get; set; }
         public char PaddingChar { get; set; }
         public bool IsNullable { get; set; }
         public string NullValue { get; set; }
@@ -74,9 +74,9 @@ namespace FlatMapper
             
         }
 
-        public IFieldSettings WithLenght(int lenght)
+        public IFieldSettings WithLength(int length)
         {
-            this.Lenght = lenght;
+            this.Length = length;
             return this;
         }
 
