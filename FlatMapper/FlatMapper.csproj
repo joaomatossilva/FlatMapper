@@ -42,9 +42,11 @@
     <Compile Include="DelimitedLayout.cs" />
     <Compile Include="DynamicMethodCompiler.cs" />
     <Compile Include="FieldSettings.cs" />
+    <Compile Include="FieldValueConverter.cs" />
     <Compile Include="FixedLengthLayout.cs" />
     <Compile Include="FlatFile.cs" />
     <Compile Include="IFieldSettings.cs" />
+    <Compile Include="IFieldValueConverter.cs" />
     <Compile Include="Layout.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
