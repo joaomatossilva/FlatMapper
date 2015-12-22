@@ -23,12 +23,13 @@ namespace FlatMapper.Tests
                     .HeaderLines(2)
                     .WithMember(o => o.Id, set => set.WithLength(5).WithLeftPadding('0'))
                     .WithMember(o => o.Description, set => set.WithLength(25).WithRightPadding(' '))
-                    .WithMember(o => o.NullableInt, set => set.WithLength(5).AllowNull("=Null").WithLeftPadding('0'));
+                    .WithMember(o => o.NullableInt, set => set.WithLength(5).AllowNull("=Null").WithLeftPadding('0'))
+                    .WithMember(o => o.NullableEnum, set => set.WithLength(10).AllowNull("======NULL").WithLeftPadding(' '));
 
             objects = new List<TestObject>();
             for (int i = 1; i <= 10; i++)
             {
-                objects.Add(new TestObject { Id = i, Description = "Description " + i, NullableInt = i % 5 == 0 ? null : (int?)3 });
+                objects.Add(new TestObject { Id = i, Description = "Description " + i, NullableInt = i % 5 == 0 ? null : (int?)3, NullableEnum = i % 3 == 0 ? null : (Gender?)(i % 3) });
             }
         }
 

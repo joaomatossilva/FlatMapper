@@ -20,6 +20,10 @@ namespace FlatMapper
 
         public virtual object FromString(string value)
         {
+            if (TargetType.IsEnum)
+            {
+                return Enum.Parse(TargetType, value);
+            }
             return Convert.ChangeType(value, TargetType);
         }
 

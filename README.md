@@ -30,7 +30,8 @@ FlatMapper is a library to import and export data from and to plain text files.
 					.HeaderLines(1)
 					.WithMember(o => o.Id, set => set.WithLength(5).WithLeftPadding('0'))
 					.WithMember(o => o.Description, set => set.WithLength(25).WithRightPadding(' '))
-					.WithMember(o => o.NullableInt, set => set.WithLength(5).AllowNull("=Null").WithLeftPadding('0'));
+					.WithMember(o => o.NullableInt, set => set.WithLength(5).AllowNull("=Null").WithLeftPadding('0'))
+                    .WithMember(o => o.NullableEnum, set => set.WithLength(10).AllowNull("======NULL").WithLeftPadding(' '));
     
 
 ### Delimited Layout
@@ -41,7 +42,8 @@ FlatMapper is a library to import and export data from and to plain text files.
 					.HeaderLines(1)
 		            .WithMember(o => o.Id, set => set.WithLength(5).WithLeftPadding('0'))
 		            .WithMember(o => o.Description, set => set.WithLength(25).WithRightPadding(' '))
-		            .WithMember(o => o.NullableInt, set => set.WithLength(5).AllowNull("=Null").WithLeftPadding('0'));
+		            .WithMember(o => o.NullableInt, set => set.WithLength(5).AllowNull("=Null").WithLeftPadding('0'))
+                    .WithMember(o => o.NullableEnum, set => set.WithLength(10).AllowNull("").WithLeftPadding(' '));
 
 ### Reading and Writing
 
