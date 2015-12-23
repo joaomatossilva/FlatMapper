@@ -26,7 +26,8 @@ namespace FlatMapper.Tests
             var idHash = Id.GetHashCode();
             var descriptionHash = Object.ReferenceEquals(Description, null) ? 0 : Description.GetHashCode();
             var nullableIntHash = !NullableInt.HasValue ? 0 : NullableInt.Value.GetHashCode();
-            return idHash ^ descriptionHash ^ nullableIntHash;
+            var nullableEnum = !NullableEnum.HasValue ? 0 : NullableEnum.Value.GetHashCode();
+            return idHash ^ descriptionHash ^ nullableIntHash ^ nullableEnum;
         }
 
         public bool Equals(TestObject other)
