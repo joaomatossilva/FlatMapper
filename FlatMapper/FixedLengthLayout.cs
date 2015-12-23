@@ -34,6 +34,11 @@ namespace FlatMapper
                 return (FixedLengthLayout)base.HeaderLines(count);
             }
 
+            public FixedLengthLayout WithMember<TMember>(Expression<Func<T, TMember>> expression)
+            {
+                return this.WithMember(expression, set => { });
+            }
+
             public new FixedLengthLayout WithMember<TMember>(Expression<Func<T, TMember>> expression, Action<IFieldSettings<T, TMember>> settings)
             {
                 return (FixedLengthLayout)base.WithMember(expression, settings);

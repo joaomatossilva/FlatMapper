@@ -41,6 +41,11 @@ namespace FlatMapper
                 return (DelimitedLayout)base.HeaderLines(count);
             }
 
+            public DelimitedLayout WithMember<TMember>(Expression<Func<T, TMember>> expression)
+            {
+                return this.WithMember(expression, set => { });
+            }
+
             public new DelimitedLayout WithMember<TMember>(Expression<Func<T, TMember>> expression, Action<IFieldSettings<T, TMember>> settings)
             {
                 return (DelimitedLayout)base.WithMember(expression, settings);
