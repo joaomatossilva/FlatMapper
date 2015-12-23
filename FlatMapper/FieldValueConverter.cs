@@ -1,5 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel;
+using System.Globalization;
 using System.Linq;
 using System.Text;
 
@@ -7,6 +9,7 @@ namespace FlatMapper
 {
     public class FieldValueConverter<TMember> : IFieldValueConverter
     {
+        private static readonly Type StringType = typeof(string);
         protected Type TargetType { get; private set; }
 
         public FieldValueConverter()
@@ -18,18 +21,22 @@ namespace FlatMapper
             }
         }
 
-        public virtual object FromString(string value)
+        public virtual object FromString(string value, IFormatProvider formatProvider)
         {
             if (TargetType.IsEnum)
             {
                 return Enum.Parse(TargetType, value);
             }
-            return Convert.ChangeType(value, TargetType);
+            return Convert.ChangeType(value, TargetType, formatProvider);
         }
 
-        public virtual string FromValue(object value)
+        public virtual string FromValue(object value, IFormatProvider formatProvider)
         {
-            return value.ToString();
+            if (value == null)
+            {
+                return null;
+            }
+            return (string)Convert.ChangeType(value, StringType, formatProvider);
         }
     }
 }

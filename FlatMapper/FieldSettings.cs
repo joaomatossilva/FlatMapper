@@ -31,6 +31,7 @@ namespace FlatMapper
         public bool IsNullable { get; set; }
         public string NullValue { get; set; }
         public bool PadLeft { get; set; }
+        public IFormatProvider FormatProvider { get; set; }
         public IFieldValueConverter FieldValueConverter { get; set; }
         public PropertyInfo PropertyInfo { get; protected set; }
         public Func<T, object> GetHandler { get; protected set; }
@@ -102,6 +103,12 @@ namespace FlatMapper
         public IFieldSettings<T, TMember> UseValueConverter<TValueConverter>() where TValueConverter : FieldValueConverter<TMember>, new()
         {
             this.FieldValueConverter = new TValueConverter();
+            return this;
+        }
+
+        public IFieldSettings<T, TMember> WithFormat(IFormatProvider formatProvider)
+        {
+            this.FormatProvider = formatProvider;
             return this;
         }
     }

@@ -79,7 +79,7 @@ namespace FlatMapper
                             : memberValue.TrimEnd(new char[] { fieldSettings.PaddingChar });
 
             //TODO: Execute here custom converters
-            return fieldSettings.FieldValueConverter.FromString(memberValue);
+            return fieldSettings.FieldValueConverter.FromString(memberValue, fieldSettings.FormatProvider);
         }
 
         protected virtual string GetStringValueFromField(FieldSettingsBase<T> field, object fieldValue)
@@ -88,7 +88,7 @@ namespace FlatMapper
             {
                 return field.NullValue;
             }
-            string lineValue = field.FieldValueConverter.FromValue(fieldValue);
+            string lineValue = field.FieldValueConverter.FromValue(fieldValue, field.FormatProvider);
             if (lineValue.Length < field.Length)
             {
                 lineValue = field.PadLeft

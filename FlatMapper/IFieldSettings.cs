@@ -17,6 +17,9 @@
 // 
 
 #endregion
+
+using System;
+
 namespace FlatMapper
 {
     public interface IFieldSettings<T, TMember>
@@ -30,5 +33,7 @@ namespace FlatMapper
         IFieldSettings<T, TMember> AllowNull(string nullValue);
 
         IFieldSettings<T, TMember> UseValueConverter<TValueConverter>() where TValueConverter : FieldValueConverter<TMember>, new();
+
+        IFieldSettings<T, TMember> WithFormat(IFormatProvider formatProvider);
     }
 }

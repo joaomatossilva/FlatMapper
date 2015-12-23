@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Text;
@@ -24,7 +25,8 @@ namespace FlatMapper.Tests
                     .WithMember(o => o.Id, set => set.WithLength(5).WithLeftPadding('0'))
                     .WithMember(o => o.Description, set => set.WithLength(25).WithRightPadding(' '))
                     .WithMember(o => o.NullableInt, set => set.WithLength(5).AllowNull("=Null").WithLeftPadding('0'))
-                    .WithMember(o => o.NullableEnum, set => set.WithLength(10).AllowNull("======NULL").WithLeftPadding(' '));
+                    .WithMember(o => o.NullableEnum, set => set.WithLength(10).AllowNull("======NULL").WithLeftPadding(' '))
+                    .WithMember(o => o.Date, set => set.WithLength(19).WithFormat(new CultureInfo("pt-PT"))); //PT-pt default dates are always fixed 19 chars "13-12-2015 23:41:41"
 
             objects = new List<TestObject>();
             for (int i = 1; i <= 10; i++)

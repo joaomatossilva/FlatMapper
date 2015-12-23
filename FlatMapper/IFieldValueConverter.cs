@@ -1,8 +1,10 @@
-﻿namespace FlatMapper
+﻿using System;
+
+namespace FlatMapper
 {
     public interface IFieldValueConverter
     {
-        object FromString(string value);
-        string FromValue(object value);
+        object FromString(string value, IFormatProvider formatProvider);
+        string FromValue(object value, IFormatProvider formatProvider);
     }
 }
