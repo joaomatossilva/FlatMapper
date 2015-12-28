@@ -9,8 +9,8 @@
     <licenseUrl>http://www.apache.org/licenses/LICENSE-2.0</licenseUrl>
     <projectUrl>https://github.com/kappy/FlatMapper</projectUrl>
     <requireLicenseAcceptance>false</requireLicenseAcceptance>
-    <description>A library to import and export data from plain text files</description>
+    <description>A library to import and export data from plain text files in a Linq compatible way</description>
     <copyright>Copyright 2015</copyright>
-    <tags>Flat Files Import Export</tags>
+    <tags>Flat Files Import Export Tab CSV Linq Delemited FixedWidth Mapper</tags>
   </metadata>
 </package>
