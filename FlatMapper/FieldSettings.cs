@@ -24,33 +24,32 @@ using System.Reflection;
 
 namespace FlatMapper
 {
-    public class FieldSettings<T> : IFieldSettings
+    public abstract class FieldSettingsBase<T>
     {
-
         public int Length { get; set; }
         public char PaddingChar { get; set; }
         public bool IsNullable { get; set; }
         public string NullValue { get; set; }
         public bool PadLeft { get; set; }
+        public IFormatProvider FormatProvider { get; set; }
+        public IFieldValueConverter FieldValueConverter { get; set; }
         public PropertyInfo PropertyInfo { get; protected set; }
-        public Type ConvertToType { get; protected set; }
         public Func<T, object> GetHandler { get; protected set; }
         public Action<T, object> SetHandler { get; protected set; }
 
-        public FieldSettings(Expression<Func<T, object>> expression)
+    }
+
+    public class FieldSettings<T, TMember> : FieldSettingsBase<T>, IFieldSettings<T, TMember>
+    {
+        public FieldSettings(Expression<Func<T, TMember>> expression)
         {
             var memberExpression = GetMemberExpression(expression);
             PropertyInfo = (PropertyInfo) memberExpression.Member;
-            ConvertToType = PropertyInfo.PropertyType;
-            if (PropertyInfo.PropertyType.IsGenericType && PropertyInfo.PropertyType.GetGenericTypeDefinition() == typeof(Nullable<>))
-            {
-                ConvertToType = Nullable.GetUnderlyingType(PropertyInfo.PropertyType);
-            }
             GetHandler = DynamicMethodCompiler.CreateGetHandler<T>(PropertyInfo);
             SetHandler = DynamicMethodCompiler.CreateSetHandler<T>(PropertyInfo);
         }
 
-        private MemberExpression GetMemberExpression(Expression<Func<T, object>> expression)
+        private MemberExpression GetMemberExpression(Expression<Func<T, TMember>> expression)
         {
             MemberExpression memberExpression = null;
             if (expression.Body.NodeType == ExpressionType.Convert)
@@ -74,30 +73,42 @@ namespace FlatMapper
             
         }
 
-        public IFieldSettings WithLength(int length)
+        public IFieldSettings<T, TMember> WithLength(int length)
         {
             this.Length = length;
             return this;
         }
 
-        public IFieldSettings WithLeftPadding(char paddingChar)
+        public IFieldSettings<T, TMember> WithLeftPadding(char paddingChar)
         {
             this.PaddingChar = paddingChar;
             this.PadLeft = true;
             return this;
         }
 
-        public IFieldSettings WithRightPadding(char paddingChar)
+        public IFieldSettings<T, TMember> WithRightPadding(char paddingChar)
         {
             this.PaddingChar = paddingChar;
             this.PadLeft = false;
             return this;
         }
 
-        public IFieldSettings AllowNull(string nullValue)
+        public IFieldSettings<T, TMember> AllowNull(string nullValue)
         {
             this.IsNullable = true;
             this.NullValue = nullValue;
+            return this;
+        }
+
+        public IFieldSettings<T, TMember> UseValueConverter<TValueConverter>() where TValueConverter : FieldValueConverter<TMember>, new()
+        {
+            this.FieldValueConverter = new TValueConverter();
+            return this;
+        }
+
+        public IFieldSettings<T, TMember> WithFormat(IFormatProvider formatProvider)
+        {
+            this.FormatProvider = formatProvider;
             return this;
         }
     }

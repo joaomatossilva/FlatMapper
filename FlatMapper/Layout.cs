@@ -28,14 +28,14 @@ namespace FlatMapper
     public abstract partial class Layout<T>
     {
 
-        protected List<FieldSettings<T>> InnerFields { get; private set; }
+        protected List<FieldSettingsBase<T>> InnerFields { get; private set; }
 
         internal int HeaderLinesCount { get; set; }
         protected Func<T> ItemCreateInstanceHandler { get; private set; }
 
         protected Layout()
         {
-            this.InnerFields = new List<FieldSettings<T>>();
+            this.InnerFields = new List<FieldSettingsBase<T>>();
             this.ItemCreateInstanceHandler = DynamicMethodCompiler.CreateInstantiateObjectHandler<T>();
         }
 
@@ -45,15 +45,16 @@ namespace FlatMapper
             return this;
         }
 
-        protected Layout<T> WithMember(Expression<Func<T, object>> expression, Action<IFieldSettings> settings)
+        protected Layout<T> WithMember<TMember>(Expression<Func<T, TMember>> expression, Action<IFieldSettings<T, TMember>> settings)
         {
-            var fieldSettings = new FieldSettings<T>(expression);
+            var fieldSettings = new FieldSettings<T, TMember>(expression);
             settings(fieldSettings);
+            fieldSettings.FieldValueConverter = fieldSettings.FieldValueConverter ?? new FieldValueConverter<TMember>();
             InnerFields.Add(fieldSettings);
             return this;
         }
 
-        internal IEnumerable<FieldSettings<T>> Fields
+        internal IEnumerable<FieldSettingsBase<T>> Fields
         {
             get
             {
@@ -67,7 +68,7 @@ namespace FlatMapper
 
         public abstract string BuildHeaderLine();
 
-        protected virtual object GetFieldValueFromString(FieldSettings<T> fieldSettings, string memberValue)
+        protected virtual object GetFieldValueFromString(FieldSettingsBase<T> fieldSettings, string memberValue)
         {
             if (fieldSettings.IsNullable && memberValue.Equals(fieldSettings.NullValue))
             {
@@ -78,16 +79,16 @@ namespace FlatMapper
                             : memberValue.TrimEnd(new char[] { fieldSettings.PaddingChar });
 
             //TODO: Execute here custom converters
-            return Convert.ChangeType(memberValue, fieldSettings.ConvertToType);
+            return fieldSettings.FieldValueConverter.FromString(memberValue, fieldSettings.FormatProvider);
         }
 
-        protected virtual string GetStringValueFromField(FieldSettings<T> field, object fieldValue)
+        protected virtual string GetStringValueFromField(FieldSettingsBase<T> field, object fieldValue)
         {
             if (fieldValue == null)
             {
                 return field.NullValue;
             }
-            string lineValue = fieldValue.ToString();
+            string lineValue = field.FieldValueConverter.FromValue(fieldValue, field.FormatProvider);
             if (lineValue.Length < field.Length)
             {
                 lineValue = field.PadLeft

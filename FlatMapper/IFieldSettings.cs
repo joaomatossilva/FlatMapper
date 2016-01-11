@@ -17,16 +17,23 @@
 // 
 
 #endregion
+
+using System;
+
 namespace FlatMapper
 {
-    public interface IFieldSettings
+    public interface IFieldSettings<T, TMember>
     {
-        IFieldSettings WithLength(int length);
+        IFieldSettings<T, TMember> WithLength(int length);
 
-        IFieldSettings WithLeftPadding(char paddingChar);
+        IFieldSettings<T, TMember> WithLeftPadding(char paddingChar);
 
-        IFieldSettings WithRightPadding(char paddingChar);
+        IFieldSettings<T, TMember> WithRightPadding(char paddingChar);
 
-        IFieldSettings AllowNull(string nullValue);
+        IFieldSettings<T, TMember> AllowNull(string nullValue);
+
+        IFieldSettings<T, TMember> UseValueConverter<TValueConverter>() where TValueConverter : FieldValueConverter<TMember>, new();
+
+        IFieldSettings<T, TMember> WithFormat(IFormatProvider formatProvider);
     }
 }

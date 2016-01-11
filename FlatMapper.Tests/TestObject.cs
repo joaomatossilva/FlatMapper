@@ -5,6 +5,12 @@ using System.Text;
 
 namespace FlatMapper.Tests
 {
+    public enum Gender
+    {
+        Male = 1,
+        Female = 2
+    }
+
     public class TestObject : IEquatable<TestObject>
     {
         public int Id { get; set; }
@@ -13,12 +19,17 @@ namespace FlatMapper.Tests
 
         public int? NullableInt { get; set; }
 
+        public Gender? NullableEnum { get; set; }
+
+        public DateTime Date { get; set; }
+
         public int GetHashCode(TestObject obj)
         {
             var idHash = Id.GetHashCode();
             var descriptionHash = Object.ReferenceEquals(Description, null) ? 0 : Description.GetHashCode();
             var nullableIntHash = !NullableInt.HasValue ? 0 : NullableInt.Value.GetHashCode();
-            return idHash ^ descriptionHash ^ nullableIntHash;
+            var nullableEnum = !NullableEnum.HasValue ? 0 : NullableEnum.Value.GetHashCode();
+            return idHash ^ descriptionHash ^ nullableIntHash ^ nullableEnum ^ Date.GetHashCode();
         }
 
         public bool Equals(TestObject other)
