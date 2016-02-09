@@ -11,6 +11,7 @@ FlatMapper is a library to import and export data from and to plain text files i
 ## Features
 
 + Fast - Only uses Static Reflection and Dynamic methods
++ LINQ Compatible
 + It supports character delimited and fixed length files
 + Non intrusive - You don't have to change your code. Any POCO will work
 + No external Dependencies
