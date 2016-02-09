@@ -15,8 +15,9 @@ FlatMapper is a library to import and export data from and to plain text files i
 + Non intrusive - You don't have to change your code. Any POCO will work
 + No external Dependencies
 + Iterative reads - Doesn't need to load the entire file into memory
-+ Multi-line support - Only if character delimited and quoted
++ Multi-line support (Only on character delimited and quoted)
 + Nullables support
+* Vitually any type support with FieldValueConverters
 + Fluent Interface
 + Per line/record Error handling
 + Simple to use
@@ -31,7 +32,8 @@ FlatMapper is a library to import and export data from and to plain text files i
 					.WithMember(o => o.Id, set => set.WithLength(5).WithLeftPadding('0'))
 					.WithMember(o => o.Description, set => set.WithLength(25).WithRightPadding(' '))
 					.WithMember(o => o.NullableInt, set => set.WithLength(5).AllowNull("=Null").WithLeftPadding('0'))
-                    .WithMember(o => o.NullableEnum, set => set.WithLength(10).AllowNull("======NULL").WithLeftPadding(' '));
+                    .WithMember(o => o.NullableEnum, set => set.WithLength(10).AllowNull("======NULL").WithLeftPadding(' '))
+                    .WithMember(o => o.Date, set => set.WithLength(19).WithFormat(new CultureInfo("pt-PT"))); //PT-pt default dates are always fixed 19 chars "13-12-2015 23:41:41"
     
 
 ### Delimited Layout
@@ -43,7 +45,8 @@ FlatMapper is a library to import and export data from and to plain text files i
 		            .WithMember(o => o.Id, set => set.WithLength(5).WithLeftPadding('0'))
 		            .WithMember(o => o.Description, set => set.WithLength(25).WithRightPadding(' '))
 		            .WithMember(o => o.NullableInt, set => set.WithLength(5).AllowNull("=Null").WithLeftPadding('0'))
-                    .WithMember(o => o.NullableEnum, set => set.WithLength(10).AllowNull("").WithLeftPadding(' '));
+                    .WithMember(o => o.NullableEnum, set => set.WithLength(10).AllowNull("").WithLeftPadding(' '))
+                    .WithMember(o => o.Date, set => set.WithFormat(new CultureInfo("pt-PT")));
 
 ### Reading and Writing
 
