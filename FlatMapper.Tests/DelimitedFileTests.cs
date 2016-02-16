@@ -65,5 +65,14 @@ namespace FlatMapper.Tests
         {
             return false;
         }
+
+        [Test]
+        public void can_read_string_with_field_no_Quotes()
+        {
+            var testString = "this is a test";
+            var completeString = "\"12\";\"" + testString + "\";;";
+            var result = layout.ParseLine(completeString);
+            Assert.AreEqual(testString, result.Description);
+        }
     }
 }

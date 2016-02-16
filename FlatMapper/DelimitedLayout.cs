@@ -86,14 +86,30 @@ namespace FlatMapper
             {
                 var entry = ItemCreateInstanceHandler();
                 int linePosition = 0;
-                var compositeDelimiter = !string.IsNullOrEmpty(Quotes) ? Quotes + Delimiter + Quotes : Delimiter;
-                int delimiterSize = compositeDelimiter.Length;
+                var compositeDelimiter = !string.IsNullOrEmpty(Quotes) ? Quotes + Delimiter : Delimiter;
+                int compositeDelimiterSize = compositeDelimiter.Length;
+                var delimiter = Delimiter;
+                var delimiterSize = delimiter.Length;
                 foreach (var field in this.Fields)
                 {
+                    var fieldDelimiterSize = delimiterSize;
                     int nextDelimiterIndex = -1;
-                    if (line.Length > linePosition + delimiterSize)
+                    if (line.Length <= linePosition && !multiLine)
                     {
-                        nextDelimiterIndex = line.IndexOf(compositeDelimiter, linePosition, StringComparison.InvariantCultureIgnoreCase);
+                        break;
+                    }
+                    if (line.Length > linePosition)
+                    {
+                        //if the line start with quotes, look for the quote before the delimeter
+                        if (!string.IsNullOrEmpty(Quotes) && line.Substring(linePosition, Quotes.Length) == Quotes)
+                        {
+                            nextDelimiterIndex = line.IndexOf(compositeDelimiter, linePosition, StringComparison.InvariantCultureIgnoreCase);
+                            fieldDelimiterSize = compositeDelimiterSize;
+                        }
+                        else
+                        {
+                            nextDelimiterIndex = line.IndexOf(delimiter, linePosition, StringComparison.InvariantCultureIgnoreCase);
+                        }
                     }
                     int fieldLength;
                     if (nextDelimiterIndex > -1)
@@ -107,7 +123,7 @@ namespace FlatMapper
                     string fieldValueFromLine = line.Substring(linePosition, fieldLength);
                     var convertedFieldValue = GetFieldValueFromString(field, fieldValueFromLine);
                     field.SetHandler(entry, convertedFieldValue);
-                    linePosition += fieldLength + (nextDelimiterIndex > -1 ? delimiterSize : 0);
+                    linePosition += fieldLength + (nextDelimiterIndex > -1 ? fieldDelimiterSize : 0);
                 }
                 return entry;
             }

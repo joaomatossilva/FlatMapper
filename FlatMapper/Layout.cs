@@ -70,7 +70,7 @@ namespace FlatMapper
 
         protected virtual object GetFieldValueFromString(FieldSettingsBase<T> fieldSettings, string memberValue)
         {
-            if (fieldSettings.IsNullable && memberValue.Equals(fieldSettings.NullValue))
+            if (fieldSettings.IsNullable && (string.IsNullOrEmpty(memberValue) || memberValue.Equals(fieldSettings.NullValue)))
             {
                 return null;
             }
@@ -78,7 +78,6 @@ namespace FlatMapper
                             ? memberValue.TrimStart(new char[] { fieldSettings.PaddingChar })
                             : memberValue.TrimEnd(new char[] { fieldSettings.PaddingChar });
 
-            //TODO: Execute here custom converters
             return fieldSettings.FieldValueConverter.FromString(memberValue, fieldSettings.FormatProvider);
         }
 
