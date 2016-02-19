@@ -7,7 +7,7 @@ assembly_info:
   assembly_informational_version: '{version}'
 build:
   publish_nuget: true
-  publish_nuget_symbols: true
+  publish_nuget_symbols: false
   include_nuget_references: true
   verbosity: minimal
 deploy:
