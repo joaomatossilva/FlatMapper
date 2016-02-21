@@ -1,9 +1,10 @@
-version: 0.7.0-beta-*
+version: 0.7.0-beta-{build}
 os: Visual Studio 2015
 install:
   - cmd: set PATH=C:\Program Files (x86)\MSBuild\14.0\Bin;%PATH%
   - cmd: dnvm install 1.0.0-rc1-update1
   - cmd: dnu restore
+  - cmd: IF DEFINED APPVEYOR_BUILD_NUMBER SET DNX_BUILD_VERSION=%APPVEYOR_BUILD_NUMBER%
 configuration: Release
 assembly_info:
   patch: true
