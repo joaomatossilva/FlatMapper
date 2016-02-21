@@ -6,10 +6,11 @@ using System.Linq;
 using System.Text;
 
 using NUnit.Framework;
+using Xunit;
+using Shouldly;
 
 namespace FlatMapper.Tests
 {
-    [TestFixture]
     public class FixedLengthFileTests
     {
 
@@ -17,8 +18,7 @@ namespace FlatMapper.Tests
 
         private IList<TestObject> objects;
 
-        [SetUp]
-        public void init_layout()
+        public FixedLengthFileTests()
         {
             layout = new Layout<TestObject>.FixedLengthLayout()
                     .HeaderLines(2)
@@ -35,7 +35,7 @@ namespace FlatMapper.Tests
             }
         }
 
-        [Test]
+        [Fact]
         public void can_write_read_stream()
         {
             using (var memory = new MemoryStream())
@@ -47,13 +47,13 @@ namespace FlatMapper.Tests
 
                 var objectsAfterRead = flatFile.Read().ToList();
 
-                Assert.IsTrue(objects.SequenceEqual(objectsAfterRead));
+                true.ShouldBe(objects.SequenceEqual(objectsAfterRead));
             }
         }
 
         private bool HandleEntryReadError(string s, Exception exception)
         {
-            return true;
+            return false;
         }
     }
 }

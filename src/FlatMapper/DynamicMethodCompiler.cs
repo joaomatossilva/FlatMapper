@@ -18,12 +18,11 @@ namespace FlatMapper
         internal static Func<T> CreateInstantiateObjectHandler<T>()
         {
             Type type = typeof (T);
-            ConstructorInfo constructorInfo = type.GetConstructor(BindingFlags.Public |
-                   BindingFlags.NonPublic | BindingFlags.Instance, null, new Type[0], null);
+            ConstructorInfo constructorInfo = type.GetConstructor(new Type[0]);
 
             if (constructorInfo == null)
             {
-                throw new ApplicationException(string.Format("The type {0} must declare an empty constructor(the constructor may be private, internal, protected, protected internal, or public).", type));
+                throw new Exception(string.Format("The type {0} must declare an empty constructor(the constructor may be private, internal, protected, protected internal, or public).", type));
             }
 
             DynamicMethod dynamicMethod = new DynamicMethod("InstantiateObject", MethodAttributes.Static | MethodAttributes.Public, 
@@ -45,8 +44,11 @@ namespace FlatMapper
         /// <returns></returns>
         internal static Func<T, object> CreateGetHandler<T>(PropertyInfo propertyInfo)
         {
-            var type = typeof (T);
+#if NET35
             MethodInfo getMethodInfo = propertyInfo.GetGetMethod(true);
+#else
+            MethodInfo getMethodInfo = propertyInfo.GetMethod;
+#endif
             DynamicMethod dynamicGet = CreateGetDynamicMethod<T>();
             ILGenerator getGenerator = dynamicGet.GetILGenerator();
 
@@ -67,8 +69,11 @@ namespace FlatMapper
         /// <returns></returns>
         internal static Action<T, object> CreateSetHandler<T>(PropertyInfo propertyInfo)
         {
-            var type = typeof(T);
+#if NET35
             MethodInfo setMethodInfo = propertyInfo.GetSetMethod(true);
+#else
+            MethodInfo setMethodInfo = propertyInfo.SetMethod;
+#endif
             DynamicMethod dynamicSet = CreateSetDynamicMethod<T>();
             ILGenerator setGenerator = dynamicSet.GetILGenerator();
 
@@ -95,7 +100,11 @@ namespace FlatMapper
 
         private static void BoxIfNeeded(Type type, ILGenerator generator)
         {
+#if NET35
             if (type.IsValueType)
+#else
+            if (type.GetTypeInfo().IsValueType)
+#endif 
             {
                 generator.Emit(OpCodes.Box, type);
             }
@@ -103,7 +112,11 @@ namespace FlatMapper
 
         private static void UnboxIfNeeded(Type type, ILGenerator generator)
         {
+#if NET35
             if (type.IsValueType)
+#else
+            if (type.GetTypeInfo().IsValueType)
+#endif
             {
                 generator.Emit(OpCodes.Unbox_Any, type);
             }
