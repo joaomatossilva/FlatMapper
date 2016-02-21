@@ -16,6 +16,8 @@ build:
   publish_nuget_symbols: false
   include_nuget_references: true
   verbosity: minimal
+test_script:
+  - cmd: dnx -p .\tests\FlatMapper.Tests test
 deploy:
   provider: NuGet
   api_key:
