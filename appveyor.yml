@@ -18,8 +18,11 @@ build:
   verbosity: minimal
 test_script:
   - cmd: dnx -p .\tests\FlatMapper.Tests test
+artifacts:
+  - path: artifacts\bin\FlatMapper\$(configuration)\*.nupkg
 deploy:
   provider: NuGet
+  skip_symbols: true
   api_key:
     secure: c18PmLObjM4XzNKNj8/LzYty11gya98+IerJXipzMmL9wgmHS6cGAJWYpJkDxmU2
   artifact: /.*\.nupkg/
