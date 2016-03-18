@@ -1,5 +1,5 @@
 ﻿{
-  "version": "0.7.0-beta-*",
+  "version": "0.7.0-rc1-*",
   "description": "FlatMapper Class Library",
   "authors": [ "kappy" ],
   "tags": [ "A library to import and export data from plain text files in a Linq compatible way" ],
