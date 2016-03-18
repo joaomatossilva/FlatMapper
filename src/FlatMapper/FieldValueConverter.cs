@@ -16,25 +16,15 @@ namespace FlatMapper
         public FieldValueConverter()
         {
             TargetType = typeof(TMember);
-#if NET35
-            var isGeneric = TargetType.IsGenericType;
-#else
-            var isGeneric = TargetType.GetTypeInfo().IsGenericType;
-#endif
-            if (isGeneric && TargetType.GetGenericTypeDefinition() == typeof(Nullable<>))
+            if (TargetType.IsGenericType() && TargetType.GetGenericTypeDefinition() == typeof(Nullable<>))
             {
                 TargetType = Nullable.GetUnderlyingType(TargetType);
             }
         }
 
         public virtual object FromString(string value, IFormatProvider formatProvider)
-        {
-#if NET35
-            var isEnum = TargetType.IsEnum;
-#else
-            var isEnum = TargetType.GetTypeInfo().IsEnum;
-#endif            
-            if (isEnum)
+        {     
+            if (TargetType.IsEnum())
             {
                 return Enum.Parse(TargetType, value);
             }

@@ -44,11 +44,7 @@ namespace FlatMapper
         /// <returns></returns>
         internal static Func<T, object> CreateGetHandler<T>(PropertyInfo propertyInfo)
         {
-#if NET35
-            MethodInfo getMethodInfo = propertyInfo.GetGetMethod(true);
-#else
-            MethodInfo getMethodInfo = propertyInfo.GetMethod;
-#endif
+            var getMethodInfo = propertyInfo.GetGetMethodInfo();
             DynamicMethod dynamicGet = CreateGetDynamicMethod<T>();
             ILGenerator getGenerator = dynamicGet.GetILGenerator();
 
@@ -69,11 +65,7 @@ namespace FlatMapper
         /// <returns></returns>
         internal static Action<T, object> CreateSetHandler<T>(PropertyInfo propertyInfo)
         {
-#if NET35
-            MethodInfo setMethodInfo = propertyInfo.GetSetMethod(true);
-#else
-            MethodInfo setMethodInfo = propertyInfo.SetMethod;
-#endif
+            var setMethodInfo = propertyInfo.GetSetMethodInfo();
             DynamicMethod dynamicSet = CreateSetDynamicMethod<T>();
             ILGenerator setGenerator = dynamicSet.GetILGenerator();
 
@@ -100,11 +92,7 @@ namespace FlatMapper
 
         private static void BoxIfNeeded(Type type, ILGenerator generator)
         {
-#if NET35
-            if (type.IsValueType)
-#else
-            if (type.GetTypeInfo().IsValueType)
-#endif 
+            if (type.IsValueType())
             {
                 generator.Emit(OpCodes.Box, type);
             }
@@ -112,14 +100,11 @@ namespace FlatMapper
 
         private static void UnboxIfNeeded(Type type, ILGenerator generator)
         {
-#if NET35
-            if (type.IsValueType)
-#else
-            if (type.GetTypeInfo().IsValueType)
-#endif
+            if(type.IsValueType())
             {
                 generator.Emit(OpCodes.Unbox_Any, type);
             }
         }
     }
 }
+

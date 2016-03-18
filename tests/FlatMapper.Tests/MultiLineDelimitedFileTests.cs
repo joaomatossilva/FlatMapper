@@ -46,8 +46,7 @@ namespace FlatMapper.Tests
 
                 var objectsAfterRead = flatFile.Read().ToList();
 
-                //TODO: improve this with xunit
-                true.ShouldBe(objects.SequenceEqual(objectsAfterRead));
+                Assert.True(objects.SequenceEqual(objectsAfterRead));
             }
         }
 
@@ -62,7 +61,7 @@ namespace FlatMapper.Tests
             var testString = "this;is;the;test";
             var completeString = "\"12\";\"" + testString + "\";\"=Null\"";
             var result = layout.ParseLine(completeString);
-            result.Description.ShouldBe(testString);
+            Assert.Equal(result.Description, testString);
         }
     }
 }

@@ -47,7 +47,7 @@ namespace FlatMapper.Tests
 
                 var objectsAfterRead = flatFile.Read().ToList();
 
-                true.ShouldBe(objects.SequenceEqual(objectsAfterRead));
+                Assert.True(objects.SequenceEqual(objectsAfterRead));
             }
         }
 
