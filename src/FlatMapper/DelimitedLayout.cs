@@ -103,12 +103,12 @@ namespace FlatMapper
                         //if the line start with quotes, look for the quote before the delimeter
                         if (!string.IsNullOrEmpty(Quotes) && line.Substring(linePosition, Quotes.Length) == Quotes)
                         {
-                            nextDelimiterIndex = line.IndexOf(compositeDelimiter, linePosition, StringComparison.InvariantCultureIgnoreCase);
+                            nextDelimiterIndex = line.IndexOf(compositeDelimiter, linePosition, StringComparison.OrdinalIgnoreCase);
                             fieldDelimiterSize = compositeDelimiterSize;
                         }
                         else
                         {
-                            nextDelimiterIndex = line.IndexOf(delimiter, linePosition, StringComparison.InvariantCultureIgnoreCase);
+                            nextDelimiterIndex = line.IndexOf(delimiter, linePosition, StringComparison.OrdinalIgnoreCase);
                         }
                     }
                     int fieldLength;

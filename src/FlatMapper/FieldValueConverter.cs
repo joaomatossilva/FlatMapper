@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Globalization;
 using System.Linq;
+using System.Reflection;
 using System.Text;
 
 namespace FlatMapper
@@ -15,15 +16,15 @@ namespace FlatMapper
         public FieldValueConverter()
         {
             TargetType = typeof(TMember);
-            if (TargetType.IsGenericType && TargetType.GetGenericTypeDefinition() == typeof(Nullable<>))
+            if (TargetType.IsGenericType() && TargetType.GetGenericTypeDefinition() == typeof(Nullable<>))
             {
                 TargetType = Nullable.GetUnderlyingType(TargetType);
             }
         }
 
         public virtual object FromString(string value, IFormatProvider formatProvider)
-        {
-            if (TargetType.IsEnum)
+        {     
+            if (TargetType.IsEnum())
             {
                 return Enum.Parse(TargetType, value);
             }
