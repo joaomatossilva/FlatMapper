@@ -29,11 +29,11 @@ namespace FlatMapper
 
         private readonly Stream innerStream;
 
-        private readonly Func<string, Exception, bool> handleEntryReadError;
+        private readonly Func<ParserErrorInfo, Exception, bool> handleEntryReadError;
 
         private readonly System.Text.Encoding encoding;
 
-        public FlatFile(Layout<T> layout, Stream innerStream, System.Text.Encoding encoding, Func<string, Exception, bool> handleEntryReadError)
+        public FlatFile(Layout<T> layout, Stream innerStream, System.Text.Encoding encoding, Func<ParserErrorInfo, Exception, bool> handleEntryReadError)
         {
             this.layout = layout;
             this.innerStream = innerStream;
@@ -41,19 +41,19 @@ namespace FlatMapper
             this.encoding = encoding;
         }
 
-        public FlatFile(Layout<T> layout, Stream innerStream, Func<string, Exception, bool> handleEntryReadError)
+        public FlatFile(Layout<T> layout, Stream innerStream, Func<ParserErrorInfo, Exception, bool> handleEntryReadError)
             :this(layout, innerStream, System.Text.Encoding.UTF8, handleEntryReadError)
         {
         }
 
         public FlatFile(Layout<T> layout, Stream innerStream)
-            : this(layout, innerStream, DefaultThrowExceptionOnReadError)
+            : this(layout, innerStream, DefaultOnReadError)
         {
         }
 
-        private static bool DefaultThrowExceptionOnReadError(string line, Exception exception)
+        private static bool DefaultOnReadError(ParserErrorInfo errorInfo, Exception exception)
         {
-            throw new Exception(string.Format("Error reading line '{0}'", line), exception);
+            return false;
         }
 
         public IEnumerable<T> Read()
@@ -70,9 +70,9 @@ namespace FlatMapper
                 {
                     entry = layout.ParseLine(line);
                 }
-                catch (Exception ex)
+                catch (ParserErrorException ex)
                 {
-                    if (!handleEntryReadError(line, ex))
+                    if (!handleEntryReadError(ex.ParserErrorInfo, ex))
                     {
                         throw;
                     }

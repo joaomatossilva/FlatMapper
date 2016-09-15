@@ -92,38 +92,54 @@ namespace FlatMapper
                 var delimiterSize = delimiter.Length;
                 foreach (var field in this.Fields)
                 {
-                    var fieldDelimiterSize = delimiterSize;
-                    int nextDelimiterIndex = -1;
-                    if (line.Length <= linePosition && !multiLine)
+                    try
                     {
-                        break;
-                    }
-                    if (line.Length > linePosition)
-                    {
-                        //if the line start with quotes, look for the quote before the delimeter
-                        if (!string.IsNullOrEmpty(Quotes) && line.Substring(linePosition, Quotes.Length) == Quotes)
+                        var fieldDelimiterSize = delimiterSize;
+                        int nextDelimiterIndex = -1;
+                        if (line.Length <= linePosition && !multiLine)
                         {
-                            nextDelimiterIndex = line.IndexOf(compositeDelimiter, linePosition, StringComparison.OrdinalIgnoreCase);
-                            fieldDelimiterSize = compositeDelimiterSize;
+                            break;
+                        }
+                        if (line.Length > linePosition)
+                        {
+                            //if the line start with quotes, look for the quote before the delimeter
+                            if (!string.IsNullOrEmpty(Quotes) && line.Substring(linePosition, Quotes.Length) == Quotes)
+                            {
+                                nextDelimiterIndex = line.IndexOf(compositeDelimiter, linePosition,
+                                    StringComparison.OrdinalIgnoreCase);
+                                fieldDelimiterSize = compositeDelimiterSize;
+                            }
+                            else
+                            {
+                                nextDelimiterIndex = line.IndexOf(delimiter, linePosition,
+                                    StringComparison.OrdinalIgnoreCase);
+                            }
+                        }
+                        int fieldLength;
+                        if (nextDelimiterIndex > -1)
+                        {
+                            fieldLength = nextDelimiterIndex - linePosition;
                         }
                         else
                         {
-                            nextDelimiterIndex = line.IndexOf(delimiter, linePosition, StringComparison.OrdinalIgnoreCase);
+                            fieldLength = line.Length - linePosition;
                         }
+                        string fieldValueFromLine = line.Substring(linePosition, fieldLength);
+                        var convertedFieldValue = GetFieldValueFromString(field, fieldValueFromLine);
+                        field.SetHandler(entry, convertedFieldValue);
+                        linePosition += fieldLength + (nextDelimiterIndex > -1 ? fieldDelimiterSize : 0);
                     }
-                    int fieldLength;
-                    if (nextDelimiterIndex > -1)
+                    catch (Exception ex)
                     {
-                        fieldLength = nextDelimiterIndex - linePosition;
+                        var errorInfo = new ParserErrorInfo
+                        {
+                            ErrorMessage = ex.Message,
+                            FieldName = field.PropertyInfo.Name,
+                            FieldType = field.PropertyInfo.PropertyType,
+                            Line = line
+                        };
+                        throw new ParserErrorException(errorInfo, ex);
                     }
-                    else
-                    {
-                        fieldLength = line.Length - linePosition;
-                    }
-                    string fieldValueFromLine = line.Substring(linePosition, fieldLength);
-                    var convertedFieldValue = GetFieldValueFromString(field, fieldValueFromLine);
-                    field.SetHandler(entry, convertedFieldValue);
-                    linePosition += fieldLength + (nextDelimiterIndex > -1 ? fieldDelimiterSize : 0);
                 }
                 return entry;
             }

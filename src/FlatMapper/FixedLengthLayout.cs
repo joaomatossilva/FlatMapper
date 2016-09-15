@@ -63,10 +63,24 @@ namespace FlatMapper
                 int linePosition = 0;
                 foreach (var field in this.Fields)
                 {
-                    string fieldValueFromLine = line.Substring(linePosition, field.Length);
-                    var convertedFieldValue = GetFieldValueFromString(field, fieldValueFromLine);
-                    field.SetHandler(entry, convertedFieldValue);
-                    linePosition += field.Length;
+                    try
+                    {
+                        string fieldValueFromLine = line.Substring(linePosition, field.Length);
+                        var convertedFieldValue = GetFieldValueFromString(field, fieldValueFromLine);
+                        field.SetHandler(entry, convertedFieldValue);
+                        linePosition += field.Length;
+                    }
+                    catch (Exception ex)
+                    {
+                        var errorInfo = new ParserErrorInfo
+                        {
+                            ErrorMessage = ex.Message,
+                            FieldName = field.PropertyInfo.Name,
+                            FieldType = field.PropertyInfo.PropertyType,
+                            Line = line
+                        };
+                        throw new ParserErrorException(errorInfo, ex);
+                    }
                 }
                 return entry;
             }

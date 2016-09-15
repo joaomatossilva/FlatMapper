@@ -59,7 +59,7 @@ namespace FlatMapper.Tests
             }
         }
 
-        private bool HandleEntryReadError(string s, Exception exception)
+        private bool HandleEntryReadError(ParserErrorInfo errorInfo, Exception exception)
         {
             return false;
         }
