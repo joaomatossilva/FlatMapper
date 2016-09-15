@@ -32,7 +32,6 @@ namespace FlatMapper.Tests
             {
                 Assert.Equal(ex.ParserErrorInfo.FieldName, "SecondField");
                 Assert.Equal(ex.ParserErrorInfo.FieldValue, "invalidData");
-                Assert.Equal(ex.ParserErrorInfo.Line, completeString);
                 Assert.Equal(ex.ParserErrorInfo.FieldType, typeof(int));
                 return;
             }

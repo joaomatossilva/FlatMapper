@@ -77,8 +77,21 @@ namespace FlatMapper
             memberValue = fieldSettings.PadLeft
                             ? memberValue.TrimStart(new char[] { fieldSettings.PaddingChar })
                             : memberValue.TrimEnd(new char[] { fieldSettings.PaddingChar });
-
-            return fieldSettings.FieldValueConverter.FromString(memberValue, fieldSettings.FormatProvider);
+            try
+            {
+                return fieldSettings.FieldValueConverter.FromString(memberValue, fieldSettings.FormatProvider);
+            }
+            catch (Exception ex)
+            {
+                var errorInfo = new ParserErrorInfo
+                {
+                    ErrorMessage = ex.Message,
+                    FieldName = fieldSettings.PropertyInfo.Name,
+                    FieldValue = memberValue,
+                    FieldType = fieldSettings.PropertyInfo.PropertyType
+                };
+                throw new ParserErrorException(errorInfo, ex);
+            }
         }
 
         protected virtual string GetStringValueFromField(FieldSettingsBase<T> field, object fieldValue)

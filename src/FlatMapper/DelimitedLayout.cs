@@ -123,23 +123,8 @@ namespace FlatMapper
                         fieldLength = line.Length - linePosition;
                     }
                     string fieldValueFromLine = line.Substring(linePosition, fieldLength);
-                    try
-                    {
-                        var convertedFieldValue = GetFieldValueFromString(field, fieldValueFromLine);
-                        field.SetHandler(entry, convertedFieldValue);
-                    }
-                    catch (Exception ex)
-                    {
-                        var errorInfo = new ParserErrorInfo
-                        {
-                            ErrorMessage = ex.Message,
-                            FieldName = field.PropertyInfo.Name,
-                            FieldValue = fieldValueFromLine,
-                            FieldType = field.PropertyInfo.PropertyType,
-                            Line = line
-                        };
-                        throw new ParserErrorException(errorInfo, ex);
-                    }
+                    var convertedFieldValue = GetFieldValueFromString(field, fieldValueFromLine);
+                    field.SetHandler(entry, convertedFieldValue);
                     linePosition += fieldLength + (nextDelimiterIndex > -1 ? fieldDelimiterSize : 0);
                 }
                 return entry;
