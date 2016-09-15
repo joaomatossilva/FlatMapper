@@ -19,10 +19,11 @@ namespace FlatMapper.Tests
         {
             var layout = new Layout<TestObject>.DelimitedLayout()
                 .WithDelimiter(";")
+                .WithQuote("\"")
                 .WithMember(o => o.FirstField)
                 .WithMember(o => o.SecondField);
 
-            var completeString = "\"teste\";\"invalidData\";";
+            var completeString = "\"teste\";\"invalidData\"";
             try
             {
                 var result = layout.ParseLine(completeString);              
@@ -30,6 +31,7 @@ namespace FlatMapper.Tests
             catch (ParserErrorException ex)
             {
                 Assert.Equal(ex.ParserErrorInfo.FieldName, "SecondField");
+                Assert.Equal(ex.ParserErrorInfo.FieldValue, "invalidData");
                 Assert.Equal(ex.ParserErrorInfo.Line, completeString);
                 Assert.Equal(ex.ParserErrorInfo.FieldType, typeof(int));
                 return;

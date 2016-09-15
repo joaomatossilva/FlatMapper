@@ -92,42 +92,41 @@ namespace FlatMapper
                 var delimiterSize = delimiter.Length;
                 foreach (var field in this.Fields)
                 {
-                    try
+                    var fieldDelimiterSize = delimiterSize;
+                    int nextDelimiterIndex = -1;
+                    if (line.Length <= linePosition && !multiLine)
                     {
-                        var fieldDelimiterSize = delimiterSize;
-                        int nextDelimiterIndex = -1;
-                        if (line.Length <= linePosition && !multiLine)
+                        break;
+                    }
+                    if (line.Length > linePosition)
+                    {
+                        //if the line start with quotes, look for the quote before the delimeter
+                        if (!string.IsNullOrEmpty(Quotes) && line.Substring(linePosition, Quotes.Length) == Quotes)
                         {
-                            break;
-                        }
-                        if (line.Length > linePosition)
-                        {
-                            //if the line start with quotes, look for the quote before the delimeter
-                            if (!string.IsNullOrEmpty(Quotes) && line.Substring(linePosition, Quotes.Length) == Quotes)
-                            {
-                                nextDelimiterIndex = line.IndexOf(compositeDelimiter, linePosition,
-                                    StringComparison.OrdinalIgnoreCase);
-                                fieldDelimiterSize = compositeDelimiterSize;
-                            }
-                            else
-                            {
-                                nextDelimiterIndex = line.IndexOf(delimiter, linePosition,
-                                    StringComparison.OrdinalIgnoreCase);
-                            }
-                        }
-                        int fieldLength;
-                        if (nextDelimiterIndex > -1)
-                        {
-                            fieldLength = nextDelimiterIndex - linePosition;
+                            nextDelimiterIndex = line.IndexOf(compositeDelimiter, linePosition,
+                                StringComparison.OrdinalIgnoreCase);
+                            fieldDelimiterSize = compositeDelimiterSize;
                         }
                         else
                         {
-                            fieldLength = line.Length - linePosition;
+                            nextDelimiterIndex = line.IndexOf(delimiter, linePosition,
+                                StringComparison.OrdinalIgnoreCase);
                         }
-                        string fieldValueFromLine = line.Substring(linePosition, fieldLength);
+                    }
+                    int fieldLength;
+                    if (nextDelimiterIndex > -1)
+                    {
+                        fieldLength = nextDelimiterIndex - linePosition;
+                    }
+                    else
+                    {
+                        fieldLength = line.Length - linePosition;
+                    }
+                    string fieldValueFromLine = line.Substring(linePosition, fieldLength);
+                    try
+                    {
                         var convertedFieldValue = GetFieldValueFromString(field, fieldValueFromLine);
                         field.SetHandler(entry, convertedFieldValue);
-                        linePosition += fieldLength + (nextDelimiterIndex > -1 ? fieldDelimiterSize : 0);
                     }
                     catch (Exception ex)
                     {
@@ -135,11 +134,13 @@ namespace FlatMapper
                         {
                             ErrorMessage = ex.Message,
                             FieldName = field.PropertyInfo.Name,
+                            FieldValue = fieldValueFromLine,
                             FieldType = field.PropertyInfo.PropertyType,
                             Line = line
                         };
                         throw new ParserErrorException(errorInfo, ex);
                     }
+                    linePosition += fieldLength + (nextDelimiterIndex > -1 ? fieldDelimiterSize : 0);
                 }
                 return entry;
             }

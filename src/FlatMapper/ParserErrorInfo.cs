@@ -6,6 +6,7 @@ namespace FlatMapper
     {
         public string Line { get; internal set; }
         public string FieldName { get; internal set; }
+        public string FieldValue { get; internal set; }
         public Type FieldType { get; internal set; }
         public string ErrorMessage { get; internal set; }
     }
