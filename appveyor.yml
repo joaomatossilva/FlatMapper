@@ -6,15 +6,15 @@ branches:
   - master
 configuration: Release
 build_script:
-  - ps: .\Build.ps1
+- ps: .\Build.ps1
 test: off  
 nuget:
   disable_publish_on_pr: true
 artifacts:
-  - path: artifacts\**\*.nupkg
+- path: artifacts\**\*.nupkg
   name: NuGet
 deploy:
-  - provider: NuGet
+- provider: NuGet
   name: production
   api_key:
     secure: c18PmLObjM4XzNKNj8/LzYty11gya98+IerJXipzMmL9wgmHS6cGAJWYpJkDxmU2
