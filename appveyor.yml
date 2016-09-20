@@ -1,29 +1,23 @@
-version: 0.7.0-{build}
-os: Visual Studio 2015
-install:
-  - cmd: set PATH=C:\Program Files (x86)\MSBuild\14.0\Bin;%PATH%
-  - cmd: dnvm install 1.0.0-rc1-update1
-  - cmd: dnu restore
-  - cmd: IF DEFINED APPVEYOR_BUILD_NUMBER SET DNX_BUILD_VERSION=%APPVEYOR_BUILD_NUMBER%
+version: '{build}'
+pull_requests:
+  do_not_increment_build_number: true
+branches:  
+  only:
+  - master
 configuration: Release
-assembly_info:
-  patch: true
-  file: '**\AssemblyInfo.*'
-  assembly_version: '{version}'
-  assembly_file_version: '{version}'
-  assembly_informational_version: '{version}'
-build:
-  publish_nuget: true
-  publish_nuget_symbols: false
-  include_nuget_references: true
-  verbosity: minimal
-test_script:
-  - cmd: dnx -p .\tests\FlatMapper.Tests test
+build_script:
+- ps: .\Build.ps1
+test: off  
+nuget:
+  disable_publish_on_pr: true
 artifacts:
-  - path: artifacts\bin\FlatMapper\$(configuration)\*.nupkg
+- path: artifacts\**\*.nupkg
+  name: NuGet
 deploy:
-  provider: NuGet
-  skip_symbols: true
+- provider: NuGet
+  name: production
   api_key:
     secure: c18PmLObjM4XzNKNj8/LzYty11gya98+IerJXipzMmL9wgmHS6cGAJWYpJkDxmU2
-  artifact: /.*\.nupkg/
+  on:
+    branch: master
+    appveyor_repo_tag: true

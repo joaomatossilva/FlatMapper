@@ -1,11 +1,12 @@
 ﻿{
-  "version": "0.7.0-*",
+  "version": "0.7.0",
   "description": "A library to import and export data from plain text files in a Linq compatible way",
   "authors": [ "kappy" ],
-  "tags": [ "Flat", "Files", "Import", "Export", "Tab", "Comma", "CSV", "Linq", "Delimited", "FixedWidth", "Mapper" ],
-  "projectUrl": "https://github.com/kappy/FlatMapper",
-  "licenseUrl": "http://www.apache.org/licenses/LICENSE-2.0",
-
+  "packOptions": {
+    "tags": [ "Flat", "Files", "Import", "Export", "Tab", "Comma", "CSV", "Linq", "Delimited", "FixedWidth", "Mapper" ],
+    "projectUrl": "https://github.com/kappy/FlatMapper",
+    "licenseUrl": "http://www.apache.org/licenses/LICENSE-2.0"
+  },
   "frameworks": {
     "net45": {
       "dependencies": {
@@ -22,11 +23,11 @@
     "dotnet5.1": {
       "dependencies": {
         "Microsoft.CSharp": "4.0.0",
-        "System.Collections": "4.0.0",
+        "System.Collections": "4.0.10",
         "System.Linq": "4.0.0",
         "System.Runtime": "4.0.20",
-        "System.Threading": "4.0.0",
-        "System.Runtime.Extensions": "4.0.0",
+        "System.Threading": "4.0.10",
+        "System.Runtime.Extensions": "4.0.10",
         "System.Reflection.TypeExtensions": "4.0.0",
         "System.Reflection.Emit.ILGeneration": "4.0.0",
         "System.Reflection.Emit.Lightweight": "4.0.0"
