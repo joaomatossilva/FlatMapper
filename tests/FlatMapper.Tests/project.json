@@ -2,18 +2,15 @@
   "version": "1.0.0-*",
   "description": "FlatMapper.Tests Class Library",
   "authors": [ "kappy" ],
-  "tags": [ "" ],
-  "projectUrl": "",
-  "licenseUrl": "",
 
   "frameworks": {
     "dnx451": {
       "dependencies": {
-        "Microsoft.CSharp": "4.0.1-beta-23516",
-        "System.Collections": "4.0.11-beta-23516",
-        "System.Linq": "4.0.1-beta-23516",
-        "System.Runtime": "4.0.21-beta-23516",
-        "System.Threading": "4.0.11-beta-23516"
+        "Microsoft.CSharp": "4.0.0",
+        "System.Collections": "4.0.10",
+        "System.Linq": "4.0.0",
+        "System.Runtime": "4.0.20",
+        "System.Threading": "4.0.10"
       }
     }
   },
