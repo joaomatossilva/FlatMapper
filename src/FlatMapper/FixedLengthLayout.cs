@@ -63,7 +63,7 @@ namespace FlatMapper
                 int linePosition = 0;
                 foreach (var field in this.Fields)
                 {
-                    string fieldValueFromLine = line.Substring(linePosition, field.Length);
+                    var fieldValueFromLine = line.Substring(linePosition, field.Length);
                     var convertedFieldValue = GetFieldValueFromString(field, fieldValueFromLine);
                     field.SetHandler(entry, convertedFieldValue);
                     linePosition += field.Length;
