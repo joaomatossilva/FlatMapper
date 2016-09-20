@@ -5,7 +5,6 @@
   "tags": [ "Flat", "Files", "Import", "Export", "Tab", "Comma", "CSV", "Linq", "Delimited", "FixedWidth", "Mapper" ],
   "projectUrl": "https://github.com/kappy/FlatMapper",
   "licenseUrl": "http://www.apache.org/licenses/LICENSE-2.0",
-
   "frameworks": {
     "net45": {
       "dependencies": {
