@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 using System.Reflection;
 using System.Reflection.Emit;
 
@@ -18,7 +19,8 @@ namespace FlatMapper
         internal static Func<T> CreateInstantiateObjectHandler<T>()
         {
             Type type = typeof (T);
-            ConstructorInfo constructorInfo = type.GetConstructor(new Type[0]);
+            //Try to find a default parameterless constructor
+            ConstructorInfo constructorInfo = type.GetTypeInfo().DeclaredConstructors.FirstOrDefault(c => c.GetParameters().Length == 0);
 
             if (constructorInfo == null)
             {
