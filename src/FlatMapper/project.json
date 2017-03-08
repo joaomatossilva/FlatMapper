@@ -1,11 +1,15 @@
 ﻿{
-  "version": "0.9.1",
+  "version": "0.9.2",
   "description": "A library to import and export data from plain text files in a Linq compatible way",
-  "authors": [ "kappy" ],
+  "authors": [ "Joao Matos Silva" ],
   "packOptions": {
     "tags": [ "Flat", "Files", "Import", "Export", "Tab", "Comma", "CSV", "Linq", "Delimited", "FixedWidth", "Mapper" ],
-    "projectUrl": "https://github.com/kappy/FlatMapper",
-    "licenseUrl": "http://www.apache.org/licenses/LICENSE-2.0"
+    "projectUrl": "https://github.com/joaomatossilva/FlatMapper",
+    "licenseUrl": "http://www.apache.org/licenses/LICENSE-2.0",
+    "repository": {
+      "type": "git",
+      "url": "git://github.com/joaomatossilva/FlatMapper"
+    }
   },
   "frameworks": {
     "netstandard1.1": {
