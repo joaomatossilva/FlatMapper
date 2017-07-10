@@ -18,7 +18,7 @@ FlatMapper is a library to import and export data from and to plain text files i
 + Iterative reads - Doesn't need to load the entire file into memory
 + Multi-line support (Only on character delimited and quoted)
 + Nullables support
-* Vitually any type support with FieldValueConverters
++ Vitually any type support with FieldValueConverters
 + Fluent Interface
 + Per line/record Error handling
 + Simple to use
