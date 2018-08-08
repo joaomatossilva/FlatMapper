@@ -1,10 +1,10 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
     <Description>A library to import and export data from plain text files in a Linq compatible way</Description>
     <VersionPrefix>0.9.2</VersionPrefix>
     <Authors>Joao Matos Silva</Authors>
-    <TargetFrameworks>netstandard1.1;net45</TargetFrameworks>
+    <TargetFramework>netstandard2.0</TargetFramework>
     <AssemblyName>FlatMapper</AssemblyName>
     <PackageId>FlatMapper</PackageId>
     <PackageTags>Flat;Files;Import;Export;Tab;Comma;CSV;Linq;Delimited;FixedWidth;Mapper</PackageTags>
@@ -20,7 +20,7 @@
     <GenerateAssemblyCopyrightAttribute>false</GenerateAssemblyCopyrightAttribute>
   </PropertyGroup>
 
-  <ItemGroup Condition=" '$(TargetFramework)' == 'netstandard1.1' ">
+  <ItemGroup Condition=" '$(TargetFramework)' == 'netstandard2.1' ">
     <PackageReference Include="System.Linq" Version="4.3.0" />
     <PackageReference Include="System.Linq.Expressions" Version="4.3.0" />
     <PackageReference Include="System.Reflection.Emit.Lightweight" Version="4.3.0" />
