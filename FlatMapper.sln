@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 14
-VisualStudioVersion = 14.0.25420.1
+# Visual Studio 15
+VisualStudioVersion = 15.0.27703.2026
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{1D94E1E7-100E-450E-B38B-31AF7C20B3E9}"
 EndProject
@@ -9,16 +9,15 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 	ProjectSection(SolutionItems) = preProject
 		appveyor.yml = appveyor.yml
 		Build.ps1 = Build.ps1
-		global.json = global.json
 		LICENSE.txt = LICENSE.txt
 		README.md = README.md
 	EndProjectSection
 EndProject
-Project("{8BB2217D-0F2D-49D1-97BC-3654ED321F3B}") = "FlatMapper", "src\FlatMapper\FlatMapper.xproj", "{0AB68E69-7E06-40E1-9679-4757D62170AC}"
-EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "tests", "tests", "{CBE2CE40-8CC8-4E11-BD5E-D8A3148A8142}"
 EndProject
-Project("{8BB2217D-0F2D-49D1-97BC-3654ED321F3B}") = "FlatMapper.Tests", "tests\FlatMapper.Tests\FlatMapper.Tests.xproj", "{ED2CA67B-E9AB-4F70-A304-A30FECC7E528}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "FlatMapper", "src\FlatMapper\FlatMapper.csproj", "{0AB68E69-7E06-40E1-9679-4757D62170AC}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "FlatMapper.Tests", "tests\FlatMapper.Tests\FlatMapper.Tests.csproj", "{ED2CA67B-E9AB-4F70-A304-A30FECC7E528}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -41,5 +40,8 @@ Global
 	GlobalSection(NestedProjects) = preSolution
 		{0AB68E69-7E06-40E1-9679-4757D62170AC} = {1D94E1E7-100E-450E-B38B-31AF7C20B3E9}
 		{ED2CA67B-E9AB-4F70-A304-A30FECC7E528} = {CBE2CE40-8CC8-4E11-BD5E-D8A3148A8142}
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {AC9276DA-1279-44A8-95DC-512A2D4B7D56}
 	EndGlobalSection
 EndGlobal
