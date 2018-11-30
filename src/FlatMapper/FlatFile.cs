@@ -33,12 +33,15 @@ namespace FlatMapper
 
         private readonly System.Text.Encoding encoding;
 
+        private bool _writeHeaders;
+
         public FlatFile(Layout<T> layout, Stream innerStream, System.Text.Encoding encoding, Func<ParserErrorInfo, Exception, bool> handleEntryReadError)
         {
             this.layout = layout;
             this.innerStream = innerStream;
             this.handleEntryReadError = handleEntryReadError;
             this.encoding = encoding;
+            _writeHeaders = true;
         }
 
         public FlatFile(Layout<T> layout, Stream innerStream, Func<ParserErrorInfo, Exception, bool> handleEntryReadError)
@@ -95,9 +98,13 @@ namespace FlatMapper
 
         public void Write(IEnumerable<T> entries)
         {
-            //we're not disposng the StramWriter because it will dispose the inner stream
+            //we're not disposing the StreamWriter because it will dispose the inner stream
             var writer = new StreamWriter(this.innerStream, encoding);
-            WriteHeaders(writer);
+            if(_writeHeaders)
+            {
+                WriteHeaders(writer);
+            }
+            
             foreach (var entry in entries)
             {
                 var line = layout.BuildLine(entry);
@@ -113,6 +120,7 @@ namespace FlatMapper
                 var line = layout.BuildHeaderLine();
                 writer.WriteLine(line);
             }
+            _writeHeaders = false;
         }
     }
 }
