@@ -33,7 +33,7 @@ namespace FlatMapper
 
         private readonly System.Text.Encoding encoding;
 
-        private bool _writeHeaders;
+        private bool writeHeaders;
 
         public FlatFile(Layout<T> layout, Stream innerStream, System.Text.Encoding encoding, Func<ParserErrorInfo, Exception, bool> handleEntryReadError)
         {
@@ -41,11 +41,11 @@ namespace FlatMapper
             this.innerStream = innerStream;
             this.handleEntryReadError = handleEntryReadError;
             this.encoding = encoding;
-            _writeHeaders = true;
+            writeHeaders = true;
         }
 
         public FlatFile(Layout<T> layout, Stream innerStream, Func<ParserErrorInfo, Exception, bool> handleEntryReadError)
-            :this(layout, innerStream, System.Text.Encoding.UTF8, handleEntryReadError)
+            : this(layout, innerStream, System.Text.Encoding.UTF8, handleEntryReadError)
         {
         }
 
@@ -100,11 +100,9 @@ namespace FlatMapper
         {
             //we're not disposing the StreamWriter because it will dispose the inner stream
             var writer = new StreamWriter(this.innerStream, encoding);
-            if(_writeHeaders)
-            {
-                WriteHeaders(writer);
-            }
-            
+
+            WriteHeaders(writer);
+
             foreach (var entry in entries)
             {
                 var line = layout.BuildLine(entry);
@@ -115,12 +113,15 @@ namespace FlatMapper
 
         private void WriteHeaders(StreamWriter writer)
         {
-            for (var i = 0; i < layout.HeaderLinesCount; i++)
+            if (writeHeaders)
             {
-                var line = layout.BuildHeaderLine();
-                writer.WriteLine(line);
+                for (var i = 0; i < layout.HeaderLinesCount; i++)
+                {
+                    var line = layout.BuildHeaderLine();
+                    writer.WriteLine(line);
+                }
+                writeHeaders = false;
             }
-            _writeHeaders = false;
         }
     }
 }
