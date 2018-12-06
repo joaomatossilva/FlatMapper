@@ -16,13 +16,16 @@ namespace FlatMapper.Tests
 
         private IList<TestObject> objects;
 
+        private int _headerLinesCount;
+
         
         public DelimitedFileTests()
         {
+            _headerLinesCount = 2;
             layout = new Layout<TestObject>.DelimitedLayout()
                     .WithDelimiter(";")
                     .WithQuote("\"")
-                    .HeaderLines(2)
+                    .HeaderLines(_headerLinesCount)
                     .WithMember(o => o.Id, set => set.WithLength(5).WithLeftPadding('0'))
                     .WithMember(o => o.Description, set => set.WithLength(25).WithRightPadding(' '))
                     .WithMember(o => o.NullableInt, set => set.WithLength(5).AllowNull("=Null").WithLeftPadding('0'))
@@ -56,6 +59,33 @@ namespace FlatMapper.Tests
 
                 var objectsAfterRead = flatFile.Read().ToList();
                 Assert.True(objects.SequenceEqual(objectsAfterRead));
+            }
+        }
+
+        [Fact]
+        public void doesnt_write_header_multiple_times()
+        {
+            using (var memory = new MemoryStream())
+            {
+                var flatFile = new FlatFile<TestObject>(layout, memory, HandleEntryReadError);
+
+                flatFile.Write(objects);
+                flatFile.Write(objects);
+
+                memory.Seek(0, SeekOrigin.Begin);
+                var headerLines = 0;
+                using (StreamReader streamReader = new StreamReader(memory))
+                {
+                    string line = "";
+                    while((line = streamReader.ReadLine()) != null)
+                    {
+                        if(line.Contains(nameof(TestObject.NullableEnum)))
+                        {
+                            headerLines++;
+                        }
+                    }
+                }
+                Assert.True(headerLines == _headerLinesCount);
             }
         }
 
