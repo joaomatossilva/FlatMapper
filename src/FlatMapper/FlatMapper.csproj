@@ -2,7 +2,7 @@
 
   <PropertyGroup>
     <Description>A library to import and export data from plain text files in a Linq compatible way</Description>
-    <VersionPrefix>0.9.2</VersionPrefix>
+    <VersionPrefix>0.9.3</VersionPrefix>
     <Authors>Joao Matos Silva</Authors>
     <TargetFrameworks>netstandard1.1;net45</TargetFrameworks>
     <AssemblyName>FlatMapper</AssemblyName>
