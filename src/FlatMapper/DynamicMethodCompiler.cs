@@ -1,12 +1,11 @@
 ﻿using System;
 using System.Linq;
+using System.Linq.Expressions;
 using System.Reflection;
 using System.Reflection.Emit;
 
 namespace FlatMapper
 {
-    //This code is based on Herbrandson artice on Code Project - Dynamic Code Generation vs Reflection
-    //http://www.codeproject.com/KB/cs/Dynamic_Code_Generation.aspx
 
     public static class DynamicMethodCompiler
     {
@@ -27,18 +26,13 @@ namespace FlatMapper
                 throw new Exception(string.Format("The type {0} must declare an empty constructor(the constructor may be private, internal, protected, protected internal, or public).", type));
             }
 
-            DynamicMethod dynamicMethod = new DynamicMethod("InstantiateObject", MethodAttributes.Static | MethodAttributes.Public, 
-                CallingConventions.Standard, typeof(T), null, type, true);
-
-            ILGenerator generator = dynamicMethod.GetILGenerator();
-            generator.Emit(OpCodes.Newobj, constructorInfo);
-            generator.Emit(OpCodes.Ret);
-
-            return (Func<T>)dynamicMethod.CreateDelegate(typeof(Func<T>));
+            var contructorExp = Expression.New(constructorInfo);
+            var newLambdaExp = Expression.Lambda<Func<T>>(contructorExp);
+            return (Func<T>) newLambdaExp.Compile();
         }
 
         /// <summary>
-        /// This creates a funcion that will return the property value
+        /// This creates a function that will return the property value
         /// same as return type.Property;
         /// </summary>
         /// <param name="type"></param>
@@ -46,16 +40,13 @@ namespace FlatMapper
         /// <returns></returns>
         internal static Func<T, object> CreateGetHandler<T>(PropertyInfo propertyInfo)
         {
+            var entity = Expression.Parameter(propertyInfo.DeclaringType);
             var getMethodInfo = propertyInfo.GetGetMethodInfo();
-            DynamicMethod dynamicGet = CreateGetDynamicMethod<T>();
-            ILGenerator getGenerator = dynamicGet.GetILGenerator();
 
-            getGenerator.Emit(OpCodes.Ldarg_0);
-            getGenerator.Emit(OpCodes.Call, getMethodInfo);
-            BoxIfNeeded(getMethodInfo.ReturnType, getGenerator);
-            getGenerator.Emit(OpCodes.Ret);
+            var callGetExpression = Expression.Convert(Expression.Call(entity, getMethodInfo), typeof(object));
+            var getExpression = Expression.Lambda(callGetExpression, entity);
 
-            return (Func<T, object>)dynamicGet.CreateDelegate(typeof(Func<T, object>));
+            return (Func<T, object>)getExpression.Compile();
         }
 
         /// <summary>
@@ -67,45 +58,14 @@ namespace FlatMapper
         /// <returns></returns>
         internal static Action<T, object> CreateSetHandler<T>(PropertyInfo propertyInfo)
         {
-            var setMethodInfo = propertyInfo.GetSetMethodInfo();
-            DynamicMethod dynamicSet = CreateSetDynamicMethod<T>();
-            ILGenerator setGenerator = dynamicSet.GetILGenerator();
+            var objParameter = Expression.Parameter(propertyInfo.DeclaringType, "object");
+            var valueParameter = Expression.Parameter(typeof(object), "value");
+            var propertyExp = Expression.Property(objParameter, propertyInfo);
 
-            setGenerator.Emit(OpCodes.Ldarg_0);
-            setGenerator.Emit(OpCodes.Ldarg_1);
-            UnboxIfNeeded(setMethodInfo.GetParameters()[0].ParameterType, setGenerator);
-            setGenerator.Emit(OpCodes.Call, setMethodInfo);
-            setGenerator.Emit(OpCodes.Ret);
+            var assignExp = Expression.Assign(propertyExp, Expression.Convert(valueParameter, propertyInfo.PropertyType));
 
-            return (Action<T, object>)dynamicSet.CreateDelegate(typeof(Action<T, object>));
-        }
-
-        private static DynamicMethod CreateGetDynamicMethod<T>()
-        {
-            return new DynamicMethod("DynamicGet", typeof(object),
-                  new Type[] { typeof(T) }, typeof(T), true);
-        }
-
-        private static DynamicMethod CreateSetDynamicMethod<T>()
-        {
-            return new DynamicMethod("DynamicSet", typeof(void),
-                  new Type[] { typeof(T), typeof(object) }, typeof(T), true);
-        }
-
-        private static void BoxIfNeeded(Type type, ILGenerator generator)
-        {
-            if (type.IsValueType())
-            {
-                generator.Emit(OpCodes.Box, type);
-            }
-        }
-
-        private static void UnboxIfNeeded(Type type, ILGenerator generator)
-        {
-            if(type.IsValueType())
-            {
-                generator.Emit(OpCodes.Unbox_Any, type);
-            }
+            return Expression.Lambda<Action<T, object>>
+                (assignExp, objParameter, valueParameter).Compile();
         }
     }
 }
