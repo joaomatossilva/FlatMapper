@@ -23,6 +23,8 @@ using System.IO;
 
 namespace FlatMapper
 {
+    using System.Runtime.CompilerServices;
+
     public class FlatFile<T> where T : new()
     {
         private readonly Layout<T> layout;
@@ -59,13 +61,31 @@ namespace FlatMapper
             return false;
         }
 
+        [Obsolete("Please use the async version ReadAsync. There is risk of deadlock")]
         public IEnumerable<T> Read()
         {
-            //we're not disposng the StreamReader because it will dispose the inner stream
+            var asyncEnumerable = ReadAsync();
+            var enumerator = asyncEnumerable.GetAsyncEnumerator();
+            if (enumerator == null)
+            {
+                yield break;
+            }
+
+            while (enumerator.MoveNextAsync().Result)
+            {
+                yield return enumerator.Current;
+            }
+
+            enumerator.DisposeAsync();
+        }
+
+        public async IAsyncEnumerable<T> ReadAsync()
+        {
+            //we're not disposing the StreamReader because it will dispose the inner stream
             var reader = new StreamReader(this.innerStream, encoding);
             SkipHeaders(reader);
             string line;
-            while ((line = layout.ReadLine(reader)) != null)
+            while ((line = await layout.ReadLine(reader).ConfigureAwait(false)) != null)
             {
                 bool ignoreEntry = false;
                 T entry = default(T);

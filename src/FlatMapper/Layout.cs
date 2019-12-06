@@ -25,6 +25,8 @@ using System.Reflection;
 
 namespace FlatMapper
 {
+    using System.Threading.Tasks;
+
     public abstract partial class Layout<T>
     {
 
@@ -110,9 +112,10 @@ namespace FlatMapper
             return lineValue;
         }
 
-        public virtual string ReadLine(StreamReader streamReader)
+        public virtual async Task<string> ReadLine(StreamReader streamReader)
         {
-            return streamReader.ReadLine();
+            return await streamReader.ReadLineAsync()
+                .ConfigureAwait(false);
         }
     }
 }

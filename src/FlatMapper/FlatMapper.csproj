@@ -4,7 +4,7 @@
     <Description>A library to import and export data from plain text files in a Linq compatible way</Description>
     <VersionPrefix>0.9.3</VersionPrefix>
     <Authors>Joao Matos Silva</Authors>
-    <TargetFrameworks>netstandard2.0;net45</TargetFrameworks>
+    <TargetFrameworks>netstandard2.1</TargetFrameworks>
     <AssemblyName>FlatMapper</AssemblyName>
     <PackageId>FlatMapper</PackageId>
     <PackageTags>Flat;Files;Import;Export;Tab;Comma;CSV;Linq;Delimited;FixedWidth;Mapper</PackageTags>
@@ -18,6 +18,7 @@
     <GenerateAssemblyCompanyAttribute>false</GenerateAssemblyCompanyAttribute>
     <GenerateAssemblyProductAttribute>false</GenerateAssemblyProductAttribute>
     <GenerateAssemblyCopyrightAttribute>false</GenerateAssemblyCopyrightAttribute>
+    <LangVersion>8</LangVersion>
   </PropertyGroup>
 
   <ItemGroup Condition=" '$(TargetFramework)' == 'netstandard2.0' ">

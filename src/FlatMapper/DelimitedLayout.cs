@@ -25,6 +25,8 @@ using System.Text;
 
 namespace FlatMapper
 {
+    using System.Threading.Tasks;
+
     public abstract partial class Layout<T> where T : new()
     {
         public class DelimitedLayout : Layout<T>
@@ -173,24 +175,25 @@ namespace FlatMapper
                 return stringValue;
             }
 
-            public override string ReadLine(StreamReader streamReader)
+            public override async Task<string> ReadLine(StreamReader streamReader)
             {
                 if(!multiLine)
                 {
-                    return base.ReadLine(streamReader);
+                    return await base.ReadLine(streamReader)
+                        .ConfigureAwait(false);
                 }
                 
-                return ReadLinesUntilQuote(streamReader);
+                return await ReadLinesUntilQuote(streamReader);
             }
 
             //Credits to Nuno Santos for original algorithm behind this method
-            private string ReadLinesUntilQuote(StreamReader reader)
+            private async Task<string> ReadLinesUntilQuote(StreamReader reader)
             {
                 var stringBuilder = new StringBuilder();
                 string line;
                 do
                 {
-                    line = reader.ReadLine();
+                    line = await reader.ReadLineAsync();
                     if (string.IsNullOrEmpty(line))
                     {
                         continue;
