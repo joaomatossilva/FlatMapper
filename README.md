@@ -64,7 +64,7 @@ FlatMapper is a library to import and export data from and to plain text files i
     //Writing data
     using (var fileStream = File.OpenWrite("c:\temp\data.txt"))
     {
-        var flatfile = new FlatFile<TestObject>(layout, fileStream)
+        var flatfile = new FlatFile<TestObject>(layout, fileStream);
         flatfile.Write(listOfObjects);
     }
 
